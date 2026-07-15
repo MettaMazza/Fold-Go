@@ -1,0 +1,21 @@
+# FOLD GO -- R1, the 3x3 empty board alone. Counted greedy ordering +
+# root symmetry (both structural); hard node budget; verdict or honest
+# abort, never a hang. Oracle: +9 (whole board), the published record.
+import "../constants/fold_go.ep"
+import "../foundation/enforcement.ep"
+
+define main:
+    set GO_BUDGET to 4294967296
+    set GO_NODES to 0
+    set v33 to 0 - 1000
+    set r9 to go_solve_empty(3 and 3 and 8 and 9)
+    if GO_ABORT == 0:
+        if r9 > 8:
+            set v33 to 9
+    if GO_ABORT == 1:
+        display concat("3x3 ABORTED at node budget, nodes " and int_to_string(GO_NODES))
+    else:
+        display concat("3x3 = " and concat(int_to_string(v33) and concat("   nodes " and int_to_string(GO_NODES))))
+        set ok to forced_to_be("3x3 empty-board minimax" and v33 and 9)
+        display "3x3: matches the published record exactly"
+    return 0

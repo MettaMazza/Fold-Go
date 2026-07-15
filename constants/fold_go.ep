@@ -1,0 +1,572 @@
+# ============================================================================
+#  THE FOLD GO ENGINE -- rules substrate. Counted connectivity, zero knobs.
+# ============================================================================
+#
+#  -- WHY ----------------------------------------------------------------------
+#  Go is the counted game: it ENDS in a literal count (area scoring), its
+#  dynamics are counted connectivity (groups, liberties), and a point holds
+#  exactly THREE states -- empty, black, white -- the colour count itself.
+#  The incumbents climbed this game with thousands of TPUs and millions of
+#  self-play games; this campaign climbs it the way the chess campaign
+#  climbed: every quantity a count, every rule exact, zero parameters.
+#
+#  -- DERIVATION ---------------------------------------------------------------
+#  Rules are Tromp-Taylor: the logical, fully counted formulation of Go.
+#  A POSITION is legal iff every maximal same-colour group of stones has at
+#  least one liberty (an orthogonally adjacent empty point). Groups are
+#  counted connected components (breadth-first flood over the flat board
+#  list, a visited ledger, an exact stack with a moving head -- no
+#  recursion, no heuristics). This module is the substrate the census
+#  test certifies against the published oracle before ANY play is built
+#  on it -- the same discipline as the chess bot's perft certification.
+#
+#  -- CHECK --------------------------------------------------------------------
+#  tests/fold_go_census.ep enumerates every candidate colouring of small
+#  boards and counts the legal ones; the counts are checked digit for
+#  digit against the published Tromp oracle (tromp.github.io/go/legal):
+#  1x1 = 1, 2x2 = 57, 3x3 = 12675, 4x4 = 24318165 -- and the engine HALTS
+#  on any mismatch (forced_to_be). Rectangular boards are cross-checked
+#  against an independent Python implementation (tools/go_census_referee).
+# ============================================================================
+
+# point states: 0 empty, 1 black, 2 white -- three states, the colour count
+
+# Every maximal same-colour group on the board has at least one liberty?
+# Returns 1 if the POSITION is legal under Tromp-Taylor, else 0.
+define go_position_legal with board and w as Int and h as Int returning Int:
+    set n to w * h
+    set visited to create_list()
+    set i to 0
+    repeat while i < n:
+        set ok to append_list(visited and 0)
+        set i to i + 1
+    set legal to 1
+    set p to 0
+    repeat while p < n:
+        set colour to get_list(board and p)
+        if colour > 0:
+            if get_list(visited and p) == 0:
+                # flood this group: exact stack, moving head, counted
+                set stack to create_list()
+                set ok to append_list(stack and p)
+                set ok to set_list(visited and p and 1)
+                set liberty to 0
+                set head to 0
+                repeat while head < length_list(stack):
+                    set q to get_list(stack and head)
+                    set head to head + 1
+                    set row to q / w
+                    set col to q - row * w
+                    # four orthogonal neighbours, each examined once
+                    set d to 0
+                    repeat while d < 4:
+                        set r2 to row
+                        set c2 to col
+                        if d == 0:
+                            set r2 to row - 1
+                        if d == 1:
+                            set r2 to row + 1
+                        if d == 2:
+                            set c2 to col - 1
+                        if d == 3:
+                            set c2 to col + 1
+                        set inside to 1
+                        if r2 < 0:
+                            set inside to 0
+                        if r2 > h - 1:
+                            set inside to 0
+                        if c2 < 0:
+                            set inside to 0
+                        if c2 > w - 1:
+                            set inside to 0
+                        if inside == 1:
+                            set q2 to r2 * w + c2
+                            set v2 to get_list(board and q2)
+                            if v2 == 0:
+                                set liberty to 1
+                            if v2 == colour:
+                                if get_list(visited and q2) == 0:
+                                    set ok to set_list(visited and q2 and 1)
+                                    set ok to append_list(stack and q2)
+                        set d to d + 1
+                if liberty == 0:
+                    set legal to 0
+                    set p to n
+        set p to p + 1
+    return legal
+
+# Count every legal position on a w x h board by exact enumeration:
+# a base-three odometer over the n points (three states per point, the
+# colour count), each candidate checked by the group-liberty law.
+define go_census with w as Int and h as Int returning Int:
+    set n to w * h
+    set board to create_list()
+    set i to 0
+    repeat while i < n:
+        set ok to append_list(board and 0)
+        set i to i + 1
+    set total to 0
+    set running to 1
+    repeat while running == 1:
+        if go_position_legal(board and w and h) == 1:
+            set total to total + 1
+        # base-three odometer: increment with carry
+        set pos to 0
+        set carrying to 1
+        repeat while carrying == 1:
+            if pos == n:
+                set carrying to 0
+                set running to 0
+            else:
+                set v to get_list(board and pos) + 1
+                if v == 3:
+                    set ok to set_list(board and pos and 0)
+                    set pos to pos + 1
+                else:
+                    set ok to set_list(board and pos and v)
+                    set carrying to 0
+    return total
+
+# ============================================================================
+#  R1 -- PLAY AND THE EXACT SOLVER. Tromp-Taylor no-suicide, positional
+#  superko as the seen-signature law (the chess bot's own repetition
+#  machinery), area scoring as the literal count, minimax over exact
+#  integers. Zero constants beyond the rules.
+# ============================================================================
+
+set GO_NODES to 0
+set GO_BUDGET to 1073741824
+set GO_ABORT to 0
+
+define go_copy with board and n as Int:
+    set out to create_list()
+    set i to 0
+    repeat while i < n:
+        set ok to append_list(out and get_list(board and i))
+        set i to i + 1
+    return out
+
+define go_signature with board and n as Int returning Str:
+    set s to ""
+    set i to 0
+    repeat while i < n:
+        set s to concat(s and int_to_string(get_list(board and i)))
+        set i to i + 1
+    return s
+
+# Does the group containing start have at least one liberty?
+define go_group_liberty with board and w as Int and h as Int and start as Int returning Int:
+    set n to w * h
+    set colour to get_list(board and start)
+    set visited to create_list()
+    set i to 0
+    repeat while i < n:
+        set ok to append_list(visited and 0)
+        set i to i + 1
+    set stack to create_list()
+    set ok to append_list(stack and start)
+    set ok to set_list(visited and start and 1)
+    set liberty to 0
+    set head to 0
+    repeat while head < length_list(stack):
+        set q to get_list(stack and head)
+        set head to head + 1
+        set row to q / w
+        set col to q - row * w
+        set d to 0
+        repeat while d < 4:
+            set r2 to row
+            set c2 to col
+            if d == 0:
+                set r2 to row - 1
+            if d == 1:
+                set r2 to row + 1
+            if d == 2:
+                set c2 to col - 1
+            if d == 3:
+                set c2 to col + 1
+            set inside to 1
+            if r2 < 0:
+                set inside to 0
+            if r2 > h - 1:
+                set inside to 0
+            if c2 < 0:
+                set inside to 0
+            if c2 > w - 1:
+                set inside to 0
+            if inside == 1:
+                set q2 to r2 * w + c2
+                set v2 to get_list(board and q2)
+                if v2 == 0:
+                    set liberty to 1
+                if v2 == colour:
+                    if get_list(visited and q2) == 0:
+                        set ok to set_list(visited and q2 and 1)
+                        set ok to append_list(stack and q2)
+            set d to d + 1
+    return liberty
+
+# Remove the whole group containing start (mutates the given board).
+define go_remove_group with board and w as Int and h as Int and start as Int returning Int:
+    set colour to get_list(board and start)
+    set stack to create_list()
+    set ok to append_list(stack and start)
+    set ok to set_list(board and start and 0)
+    set head to 0
+    set removed to 1
+    repeat while head < length_list(stack):
+        set q to get_list(stack and head)
+        set head to head + 1
+        set row to q / w
+        set col to q - row * w
+        set d to 0
+        repeat while d < 4:
+            set r2 to row
+            set c2 to col
+            if d == 0:
+                set r2 to row - 1
+            if d == 1:
+                set r2 to row + 1
+            if d == 2:
+                set c2 to col - 1
+            if d == 3:
+                set c2 to col + 1
+            set inside to 1
+            if r2 < 0:
+                set inside to 0
+            if r2 > h - 1:
+                set inside to 0
+            if c2 < 0:
+                set inside to 0
+            if c2 > w - 1:
+                set inside to 0
+            if inside == 1:
+                set q2 to r2 * w + c2
+                if get_list(board and q2) == colour:
+                    set ok to set_list(board and q2 and 0)
+                    set ok to append_list(stack and q2)
+                    set removed to removed + 1
+            set d to d + 1
+    return removed
+
+# Play colour at p: returns the RESULTING board, or an EMPTY list when the
+# move is illegal (occupied, or suicide -- captures resolve first).
+define go_result with board and w as Int and h as Int and p as Int and colour as Int:
+    set out to create_list()
+    if get_list(board and p) == 0:
+        set n to w * h
+        set nb to go_copy(board and n)
+        set ok to set_list(nb and p and colour)
+        set enemy to 3 - colour
+        set row to p / w
+        set col to p - row * w
+        set d to 0
+        repeat while d < 4:
+            set r2 to row
+            set c2 to col
+            if d == 0:
+                set r2 to row - 1
+            if d == 1:
+                set r2 to row + 1
+            if d == 2:
+                set c2 to col - 1
+            if d == 3:
+                set c2 to col + 1
+            set inside to 1
+            if r2 < 0:
+                set inside to 0
+            if r2 > h - 1:
+                set inside to 0
+            if c2 < 0:
+                set inside to 0
+            if c2 > w - 1:
+                set inside to 0
+            if inside == 1:
+                set q2 to r2 * w + c2
+                if get_list(nb and q2) == enemy:
+                    if go_group_liberty(nb and w and h and q2) == 0:
+                        set ok to go_remove_group(nb and w and h and q2)
+            set d to d + 1
+        # no-suicide: the placed stone's own group must breathe
+        if go_group_liberty(nb and w and h and p) == 1:
+            set out to nb
+    return out
+
+# Tromp-Taylor area: Black points minus White points. A stone counts for
+# its colour; an empty region counts for a colour iff it reaches ONLY that
+# colour. The score is the literal count -- the game's own verdict.
+define go_area with board and w as Int and h as Int returning Int:
+    set n to w * h
+    set visited to create_list()
+    set i to 0
+    repeat while i < n:
+        set ok to append_list(visited and 0)
+        set i to i + 1
+    set diff to 0
+    set p to 0
+    repeat while p < n:
+        set v to get_list(board and p)
+        if v == 1:
+            set diff to diff + 1
+        if v == 2:
+            set diff to diff - 1
+        if v == 0:
+            if get_list(visited and p) == 0:
+                set stack to create_list()
+                set ok to append_list(stack and p)
+                set ok to set_list(visited and p and 1)
+                set size to 0
+                set sees_b to 0
+                set sees_w to 0
+                set head to 0
+                repeat while head < length_list(stack):
+                    set q to get_list(stack and head)
+                    set head to head + 1
+                    set size to size + 1
+                    set row to q / w
+                    set col to q - row * w
+                    set d to 0
+                    repeat while d < 4:
+                        set r2 to row
+                        set c2 to col
+                        if d == 0:
+                            set r2 to row - 1
+                        if d == 1:
+                            set r2 to row + 1
+                        if d == 2:
+                            set c2 to col - 1
+                        if d == 3:
+                            set c2 to col + 1
+                        set inside to 1
+                        if r2 < 0:
+                            set inside to 0
+                        if r2 > h - 1:
+                            set inside to 0
+                        if c2 < 0:
+                            set inside to 0
+                        if c2 > w - 1:
+                            set inside to 0
+                        if inside == 1:
+                            set q2 to r2 * w + c2
+                            set v2 to get_list(board and q2)
+                            if v2 == 1:
+                                set sees_b to 1
+                            if v2 == 2:
+                                set sees_w to 1
+                            if v2 == 0:
+                                if get_list(visited and q2) == 0:
+                                    set ok to set_list(visited and q2 and 1)
+                                    set ok to append_list(stack and q2)
+                        set d to d + 1
+                if sees_b == 1:
+                    if sees_w == 0:
+                        set diff to diff + size
+                if sees_w == 1:
+                    if sees_b == 0:
+                        set diff to diff - size
+        set p to p + 1
+    return diff
+
+# THE EXACT SOLVER: minimax with alpha-beta over Black-minus-White area,
+# to_move 1 maximizes, 2 minimizes. passed = 1 when the previous move was
+# a pass (two passes end the game at the literal count). seen carries the
+# path's position signatures "|sig|sig|...": a stone move recreating any
+# prior position is illegal (positional superko). Every value is exact.
+define go_solve with board and w as Int and h as Int and to_move as Int and passed as Int and seen as Str and alpha as Int and beta as Int returning Int:
+    set GO_NODES to GO_NODES + 1
+    if GO_NODES > GO_BUDGET:
+        set GO_ABORT to 1
+    set n to w * h
+    set best to 0 - 1000
+    if to_move == 2:
+        set best to 1000
+    set a to alpha
+    set b to beta
+    # COUNTED GREEDY ORDERING (the chess campaign's ordering law carried
+    # over): children are searched in order of their own immediate exact
+    # area count for the mover -- captures and big claims first. A counted
+    # quantity computed forward, affecting speed only, never a value.
+    set kids to create_list()
+    set keys to create_list()
+    set p to 0
+    repeat while p < n:
+        set nb to go_result(board and w and h and p and to_move)
+        if length_list(nb) > 0:
+            set sig to concat("|" and concat(go_signature(nb and n) and "|"))
+            if string_index_of(seen and sig) < 0:
+                set k to go_area(nb and w and h)
+                if to_move == 2:
+                    set k to 0 - k
+                set ok to append_list(kids and p)
+                set ok to append_list(keys and k)
+        set p to p + 1
+    set m to length_list(kids)
+    set done to 0
+    set r to 0
+    repeat while r < m:
+        if done == 0:
+            if GO_ABORT == 1:
+                set done to 1
+            else:
+                # selection: the remaining child with the largest counted key
+                set bi to 0 - 1
+                set bk to 0 - 100000
+                set j to 0
+                repeat while j < m:
+                    if get_list(keys and j) > bk:
+                        set bk to get_list(keys and j)
+                        set bi to j
+                    set j to j + 1
+                set p2 to get_list(kids and bi)
+                set ok to set_list(keys and bi and (0 - 200000))
+                set nb to go_result(board and w and h and p2 and to_move)
+                set sig to concat("|" and concat(go_signature(nb and n) and "|"))
+                set v to go_solve(nb and w and h and (3 - to_move) and 0 and concat(seen and sig) and a and b)
+                if to_move == 1:
+                    if v > best:
+                        set best to v
+                    if best > a:
+                        set a to best
+                else:
+                    if v < best:
+                        set best to v
+                    if best < b:
+                        set b to best
+                if a > b - 1:
+                    set done to 1
+        set r to r + 1
+    # the pass move, always legal; two passes score the board as it stands
+    if done == 0:
+        set pv to 0
+        if passed == 1:
+            set pv to go_area(board and w and h)
+        else:
+            set pv to go_solve(board and w and h and (3 - to_move) and 1 and seen and a and b)
+        if to_move == 1:
+            if pv > best:
+                set best to pv
+        else:
+            if pv < best:
+                set best to pv
+    return best
+
+# Solve a board from scratch (its own position is the first entry in the
+# path history), full window.
+define go_solve_root with board and w as Int and h as Int and to_move as Int returning Int:
+    set n to w * h
+    set seen to concat("|" and concat(go_signature(board and n) and "|"))
+    return go_solve(board and w and h and to_move and 0 and seen and (0 - 1000) and 1000)
+
+# THE BOARD'S OWN SYMMETRY (forced, structural): the value function
+# commutes with every automorphism of the board, and the EMPTY board with
+# empty history is invariant under all of them -- so the empty-board root
+# needs only one first move per symmetry orbit. Representatives are
+# COMPUTED forward: each point's orbit under the group (the dihedral maps;
+# transpose only when the board is square), representative = the smallest
+# index. Nothing chosen; the group is the board's.
+define go_orbit_rep with p as Int and w as Int and h as Int returning Int:
+    set row to p / w
+    set col to p - row * w
+    set rep to p
+    set t to 0
+    repeat while t < 8:
+        set r2 to row
+        set c2 to col
+        if t == 1:
+            set r2 to h - 1 - row
+        if t == 2:
+            set c2 to w - 1 - col
+        if t == 3:
+            set r2 to h - 1 - row
+            set c2 to w - 1 - col
+        set usable to 1
+        if t > 3:
+            if w == h:
+                set r2 to col
+                set c2 to row
+                if t == 5:
+                    set r2 to w - 1 - col
+                if t == 6:
+                    set c2 to h - 1 - row
+                if t == 7:
+                    set r2 to w - 1 - col
+                    set c2 to h - 1 - row
+            else:
+                set usable to 0
+        if usable == 1:
+            set q to r2 * w + c2
+            if q < rep:
+                set rep to q
+        set t to t + 1
+    return rep
+
+# Empty-board solve using root symmetry: only orbit representatives are
+# searched at the FIRST move (their orbit-mates carry equal value by the
+# automorphism law); everything below the root is the full exact solver.
+define go_solve_empty with w as Int and h as Int and alpha as Int and beta as Int returning Int:
+    set n to w * h
+    set board to create_list()
+    set i to 0
+    repeat while i < n:
+        set ok to append_list(board and 0)
+        set i to i + 1
+    set seen to concat("|" and concat(go_signature(board and n) and "|"))
+    set best to 0 - 1000
+    set a to alpha
+    set p to 0
+    repeat while p < n:
+        if go_orbit_rep(p and w and h) == p:
+            set nb to go_result(board and w and h and p and 1)
+            if length_list(nb) > 0:
+                set sig to concat("|" and concat(go_signature(nb and n) and "|"))
+                set v to go_solve(nb and w and h and 2 and 0 and concat(seen and sig) and a and beta)
+                if v > best:
+                    set best to v
+                if best > a:
+                    set a to best
+        set p to p + 1
+    # Black may also open with a pass
+    if a > beta - 1:
+        return best
+    set pv to go_solve(board and w and h and 2 and 1 and seen and a and beta)
+    if pv > best:
+        set best to pv
+    return best
+
+# THE VALUE SCAN (the counted binary-question ladder): the minimax value is
+# found by null-window questions 'is v >= k?' from the whole board downward
+# -- each question a (k-1, k) window, each answer exact; the first yes IS
+# the value. The window is the fold's own two-point gate: one integer of
+# doubt, decided whole (the atomic spike, as ever). Sound because go_solve
+# is exact path search under positional superko (no memo, no inverse fold).
+# Value of an ARBITRARY position solved as a fresh game (its own position
+# opens the path history), by the same null-window question ladder -- used
+# by the in-room certification so every state costs a few cheap questions,
+# never one heavy full-window search.
+define go_state_value with board and w as Int and h as Int and to_move as Int returning Int:
+    set n to w * h
+    set seen to concat("|" and concat(go_signature(board and n) and "|"))
+    set k to n
+    set found to 0 - 1000
+    repeat while k > (0 - n) - 1:
+        if found == 0 - 1000:
+            set r to go_solve(board and w and h and to_move and 0 and seen and k - 1 and k)
+            if r > k - 1:
+                set found to k
+        set k to k - 1
+    return found
+
+define go_value_scan with w as Int and h as Int returning Int:
+    set n to w * h
+    set k to n
+    set found to 0 - 1000
+    repeat while k > (0 - n) - 1:
+        if found == 0 - 1000:
+            set r to go_solve_empty(w and h and k - 1 and k)
+            if GO_ABORT == 1:
+                set k to (0 - n) - 1
+            else:
+                if r > k - 1:
+                    set found to k
+        set k to k - 1
+    return found

@@ -1,0 +1,35 @@
+# ============================================================================
+#  FOLD GO -- R0, THE CENSUS. The rules substrate certified before any play.
+# ============================================================================
+#  The engine's exact enumeration of legal positions is checked digit for
+#  digit against the published Tromp oracle (tromp.github.io/go/legal) --
+#  the same oracle-certification pattern as the chess bot's perft census
+#  (20 / 400 / 8,902) and fold_solver against Bouton. The oracle values
+#  live on the COMPARISON side only; the engine's counts are its own
+#  forward enumeration, and any mismatch HALTS the run (forced_to_be).
+#  Rectangular boards (no published oracle) are printed for the
+#  independent Python referee to cross-check (tools/go_census_referee.py).
+# ============================================================================
+import "../constants/fold_go.ep"
+import "../foundation/enforcement.ep"
+
+define main:
+    display "FOLD GO -- R0 census: the engine's counts vs the published oracle"
+    set c11 to go_census(1 and 1)
+    set ok to forced_to_be("legal Go positions 1x1" and c11 and 1)
+    display concat("  1x1 = " and int_to_string(c11))
+    set c22 to go_census(2 and 2)
+    set ok to forced_to_be("legal Go positions 2x2" and c22 and 57)
+    display concat("  2x2 = " and int_to_string(c22))
+    set c33 to go_census(3 and 3)
+    set ok to forced_to_be("legal Go positions 3x3" and c33 and 12675)
+    display concat("  3x3 = " and int_to_string(c33))
+    set c12 to go_census(1 and 2)
+    display concat("  1x2 = " and concat(int_to_string(c12) and "  (for the independent referee)"))
+    set c23 to go_census(2 and 3)
+    display concat("  2x3 = " and concat(int_to_string(c23) and "  (for the independent referee)"))
+    set c44 to go_census(4 and 4)
+    set ok to forced_to_be("legal Go positions 4x4" and c44 and 24318165)
+    display concat("  4x4 = " and int_to_string(c44))
+    display "R0 CENSUS: every count matches the oracle digit for digit"
+    return 0

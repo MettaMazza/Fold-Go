@@ -1,0 +1,12 @@
+# Bundled ErnosPlain toolchain build artifacts
+compiler/target/
+
+# ernos-generated C intermediates
+*_compiled.c
+
+# compiled binaries — rebuild with `ernos` (see AGENT.md §3)
+/tests/fold_go_census
+/tests/fold_go_solve
+/tests/fold_go_solve33
+
+.DS_Store
