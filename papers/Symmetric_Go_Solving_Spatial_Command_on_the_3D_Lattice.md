@@ -1,106 +1,57 @@
-# Symmetric Go: Solving Spatial Command on the 3D Lattice with Zero Parameters
+# Symmetric Go: Exact Counted Legality and Small-Board Solving with Zero Trained Parameters
 
-**Maria Smith**  
-*Ernos Labs, Scotland*  
-*July 9, 2026*  
-
-> [!NOTE]  
-> **Preliminary Preprint Notice:** The empirical match statistics, tournament win-rates, and scaling curves reported in this preprint represent development snapshots. A complete evaluation program consisting of refereed tournament sweeps against GnuGo on $9 \times 9$ and $19 \times 19$ boards is reported. This preprint will be updated with additional benchmarks as higher-strength neural opponents are integrated.
-
----
+**Maria Smith — Ernos Labs, Scotland — July 2026**
 
 ## Abstract
 
-We present the theoretical formulation and empirical validation of a Go playing engine containing **exactly zero tunable parameters and zero gradient-descent training** that achieves competitive playing strength through direct topological evaluation of the board's spatial command. Rather than utilizing deep convolutional neural networks trained via reinforcement learning self-play (such as in AlphaGo) or handcrafted heuristic feature weights, the engine evaluates positions by computing the exact liberties of stone groups to calculate spatial coordinate command.
+This paper presents the exact substrate of Fold Go, a computational proof of the Smithian Fold Theory. The system is founded on the machine-checked, self-proven theorem **there is no nothing**, which forces the One and its fold rather than assuming them. Go positions are represented as finite three-state coordinate fields; groups and liberties are counted connected components; every reported finite census is generated forward by the engine and independently checked.
 
-In refereed matches against GnuGo (`gnugo --mode gtp`), the engine achieved a **7–3 victory** on a $9 \times 9$ board and a **2–0 victory** on a $19 \times 19$ board (search depth 2), demonstrating the high scalability of the zero-parameter spatial command formulation. By pruning coordinate searches using a Dihedral symmetry orbit reduction and a sparse lookahead overlay, the search space is collapsed by multiple orders of magnitude, making real-time minimax lookahead computationally tractable without dense Monte Carlo Tree Search (MCTS) or specialized hardware accelerators.
+The release reproduces the exact legal-position inventory for boards 1×1 through 4×4 and two rectangles, with zero disagreements from an independent referee. Its exact game solver freshly secures empty-board values through 2×2. A previously stated 3×3 value and claimed 9×9/19×19 tournament aggregates are not promoted without a completed current receipt. Competitive evidence is reported separately in the companion Fold Go development-result paper.
 
----
+## 1. Counted legality
 
-## 1. Introduction
+Each intersection has exactly three rule states: empty, Black, or White. A board is accepted only when every maximal same-colour connected component has a liberty. The engine uses an explicit visited ledger and stack; no learned classifier or statistical legality approximation enters.
 
-For decades, the game of Go has stood as the pinnacle challenge for artificial intelligence. The historical breakthrough of AlphaGo (Silver et al., 2016) demonstrated that deep neural networks combined with Monte Carlo Tree Search (MCTS) could surpass human grandmaster level. However, AlphaGo and its descendants (AlphaGo Zero, AlphaZero) purchase their strength at a staggering computational cost: millions of games of reinforcement learning self-play and megawatts of TPU energy.
+The engine's census is compared against published Tromp counts only after enumeration. A mismatch calls the enforcement layer and halts.
 
-This paradigm operates under the assumption that Go position evaluation is a statistical curve-fitting problem. In contrast, the Smithian Fold Theory (SFT) models the board as a discrete coordinate lattice where spatial command is a counted geometric invariant. 
+| Board | Engine count | Independent check |
+|---|---:|---:|
+| 1×1 | 1 | 1 |
+| 2×2 | 57 | 57 |
+| 3×3 | 12,675 | 12,675 |
+| 4×4 | 24,318,165 | 24,318,165 |
+| 1×2 | 5 | 5 |
+| 2×3 | 489 | 489 |
 
-We present **Symmetric Go**, a zero-parameter, zero-gradient engine that approaches Go evaluation as an exact calculation of spatial command rather than statistical estimation. We show that by maximizing coordinate liberties and enforcing centered geometric bias (Tengen alignment), the engine naturally exhibits complex tactical and strategic play, defeating classic heuristic-based engines without a single trained parameter.
+## 2. Exact solver
 
----
+The exact `.ep` solver and the bounded Python competitive harness are distinct systems and must not share a headline. Fresh exact empty-board results are:
 
-## 2. Spatial Command Formulation
+- 1×1 = 0, 2 visited nodes;
+- 1×2 = 0, 30 visited nodes;
+- 2×2 = +1, 17,038,501 visited nodes.
 
-### 2.1 The Active Liberty Metric
-Unlike chess, where static piece values provide a baseline heuristic, Go stones are identical. The value of a position resides entirely in the structural integrity (liberties) of the stone groups and their command over empty intersections.
+The release audit did not finish a fresh 3×3 proof and therefore makes no current 3×3 claim. The stale Python solve referee also expects fields the current solver no longer emits; repairing that structured result contract is part of the next exact release.
 
-Let a board state $B$ of size $N \times N$ be defined by the positions of Black and White stones. For any move $m$, we define the *Active Spatial Command* $S(m)$ of the player as:
+## 3. Symmetry and proof obligations
 
-$$S(m) = |L_{\text{own}}| - |L_{\text{opp}}|$$
+Dihedral reduction is valid only when it preserves the complete state on which legality and value depend. For simple finite census states, board symmetry is sufficient. For positional-superko competitive states, the history must be transformed with the board. Current competitive code canonicalizes the current board only, so its transposition cache is not an exact solver for the augmented rule state.
 
-where:
-* $L_{\text{own}}$ is the set of unique liberties of the player's stone groups after playing move $m$.
-* $L_{\text{opp}}$ is the set of unique liberties of the opponent's stone groups.
+This distinction is constructive: it identifies the next theorem-to-code bridge precisely. The optimized search will be admitted only when an all-actions, no-cache reference agrees exhaustively on small reachable augmented states.
 
-A liberty represents a coordinate path of expansion or defense. By maximizing $S(m)$, the engine simultaneously optimizes the survival of its own groups and restricts the breathing space of the opponent's stones.
+## 4. Reproducibility
 
-### 2.2 Star-Point Tengen Heuristic
-When $S(m)$ yields identical values for multiple legal moves, the engine breaks ties using a *Centered Geometric Bias*. It calculates the Euclidean distance of each candidate move $m_i = (r_i, c_i)$ to the center of the board (Tengen) $T = (r_c, c_c)$:
-
-$$D(m_i) = \sqrt{(r_i - r_c)^2 + (c_i - c_c)^2}$$
-
-Moves that minimize $D(m_i)$ are preferred. This geometric bias forces the engine to establish early control of the center star points, maximizing its coordinate command footprint and coordinate projection outward.
-
----
-
-## 3. Search Optimization and Graph Pruning
-
-Minimax search on a full $19 \times 19$ board contains a branching factor ($b \approx 250$) that normally makes depth search intractable. Symmetric Go utilizes two coordinate pruning overlays to make search lightweight and allocation-free.
-
-### 3.1 Dihedral Symmetry Orbit Reduction
-The square grid of the Go board exhibits the symmetries of the Dihedral Group $D_4$. For any move $p$, there are up to 8 symmetric equivalents on the board. The engine maps every candidate move to its lexicographically smallest orbit representative:
-
-$$p_{\text{rep}} = \min_{g \in D_4} g(p)$$
-
-Search is performed only on these orbit representatives, collapsing the branching factor of early-game states by a factor of 8.
-
-### 3.2 Sparse Coordinate Lookahead Overlay
-Rather than evaluating every empty intersection, the engine focuses search on the active boundary of play. For any board state after the opening moves, the candidate moves are restricted to intersections within a Manhattan distance of 2 from any existing stone:
-
-$$M(m) = \{ (r, c) \mid \exists (r_s, c_s) \in \text{Stones}, |r - r_s| + |c - c_s| \le 2 \}$$
-
-This sparse lookahead overlay filters out empty-space coordinates, enabling deep search on the active frontiers of the board with negligible CPU cost.
-
-Below is the schematic decision flow of the Symmetric Go tournament referee:
-
-```mermaid
-graph TD
-    A[Board State] --> B{Opening Move?}
-    B -- Yes --> C[Play Tengen / Star-Point]
-    B -- No --> D[Apply Sparse Coordinate Filter]
-    D --> E[Apply Dihedral Symmetry Reduction]
-    E --> F[Run Minimax with Alpha-Beta Pruning]
-    F --> G[Calculate Active Liberty Share]
-    G --> H[Update Transposition Cache]
-    H --> I[Execute Selected Move]
+```sh
+cd tests
+ernos fold_go_census.ep
+ernos fold_go_solve.ep
+./fold_go_census
+cd ..
+python3 tools/go_census_referee.py
 ```
 
----
-
-## 4. Empirical Match Results
-
-To evaluate the strength of Symmetric Go, we ran refereed matches using standard Go Text Protocol (GTP) harnesses.
-
-### 4.1 $9 \times 9$ Tournament
-Symmetric Go played a 10-round tournament against GnuGo (`gnugo --mode gtp`) on a $9 \times 9$ board with a komi of 6.5.
-* **Result:** Symmetric Go won **7 out of 10 rounds (70% win rate)**.
-* **Analysis:** The engine demonstrated natural territory containment and opening center dominance.
-
-### 4.2 $19 \times 19$ Tournament
-To verify scalability, the engine competed on a full $19 \times 19$ board with search depth 2.
-* **Result:** Symmetric Go won **2 out of 2 rounds (100% win rate)**.
-* **Analysis:** The sparse coordinate lookahead successfully pruned empty intersections, allowing real-time decision-making (seconds per move) on a standard processor.
-
----
+Long-running endpoints must terminate with a result or an explicit honest abort. No timeout is converted into a victory.
 
 ## 5. Conclusion
 
-Symmetric Go provides empirical proof that competitive play in Go does not require deep statistical neural networks or megawatt-scale parameter tuning. By computing the exact topological share of liberties and applying centered geometric bias, high-strength Go play emerges directly from first-principles geometry. Future work will explore sparse graph lookaheads against modern neural engines (such as KataGo) to map the upper bounds of zero-parameter spatial command.
+The exact Fold Go result is already substantive: finite Go legality and small-board game values are executable counted objects with independent checks. Larger-board competitive strength remains a forward-forcing programme, not the criterion by which the exact surface is judged.

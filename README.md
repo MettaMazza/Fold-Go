@@ -1,68 +1,55 @@
 # Fold Go
 
-> **Part of the [Smithian Fold Theory of Everything](https://github.com/MettaMazza/Smithian-Fold-Theory-Of-Everything).** Sibling zero-parameter engines: [FoldBot Chess](https://github.com/MettaMazza/FoldBot-Chess) · [Fold Protein](https://github.com/MettaMazza/Fold-Protein).
+> A computational proof of the [Smithian Fold Theory of Everything](https://github.com/MettaMazza/Smithian-Fold-Theory-Of-Everything), founded on one machine-checked, self-proven theorem: **there is no nothing**.
 
-## A Go engine that **counts instead of training** — zero parameters, zero self-play.
+## Go counted instead of trained
 
-The incumbents climbed Go with thousands of TPUs and millions of self-play games. This engine
-climbs it by counting: legality is counted connectivity (groups and liberties), a point holds
-exactly the three counted states, and the search is exact. There is no policy net, no value net,
-no learned anything.
+Fold Go has zero trained parameters, zero neural networks, and zero self-play training. Its exact substrate rebuilds legality as counted connectivity and game values as finite exhaustive search. Its competitive engine is a bounded forward-forcing development surface and is reported separately from the exact solver.
 
-### What it does — measured, and reproducible
+## Secured exact results
 
-- ✅ **Rules certified digit-for-digit against the published Tromp oracle**, the engine **halting**
-  on any mismatch: 1×1 = **1** · 2×2 = **57** · 3×3 = **12,675** · 4×4 = **24,318,165**. An
-  independent Python referee cross-checks every count.
-- 🎯 **3×3 solved to the published record, +9** — exact minimax with *counted* move ordering and
-  root symmetry, a hard node budget, and an honest abort (never a hang).
-- 🔢 **Zero parameters, zero self-play training.** Move ordering and symmetry are structural
-  (counted), never a fitted or learned score.
+- Legal-position census: 1×1 = **1**, 2×2 = **57**, 3×3 = **12,675**, 4×4 = **24,318,165**.
+- Rectangular census: 1×2 = **5**, 2×3 = **489**.
+- Independent Python census referee: **zero disagreements**.
+- Fresh exact empty-board values: 1×1 = **0**, 1×2 = **0**, 2×2 = **+1**; the 2×2 proof visits 17,038,501 nodes.
+
+A fresh 3×3 value was not completed in the bounded release audit and is not claimed by this release.
+
+## Competitive development evidence
+
+Two separate 9×9 depth-ceiling-3 batches against GNU Go 3.8 ended **SFT 2–0**. Independent replay verified every move, both pass-pass terminals, and all four internal Tromp-area-plus-7 scores. These are genuine historical results.
+
+They are not yet the secured post-repair rank. The competitive search still needs an augmented-state proof gate for complete positional-superko history, previous-pass state, transposition bound types, universal pass search, and a cryptographically bound referee contract. No current receipt supports a 19×19 or KataGo victory or tie.
+
+See [tools/RESULTS_INDEX.md](tools/RESULTS_INDEX.md) for the complete evidence map.
+
+## Reproduce the exact surface
 
 ```sh
-# see it for yourself
 cd tests
-ernos fold_go_census.ep && ./fold_go_census     # counts vs the Tromp oracle, digit for digit
-ernos fold_go_solve33.ep && ./fold_go_solve33    # 3x3 empty board = +9
-python3 ../tools/go_census_referee.py            # an independent referee agrees
+ernos fold_go_census.ep
+./fold_go_census
+cd ..
+python3 tools/go_census_referee.py
 ```
-*(The 4×4 census enumerates ~43M colourings — a couple of minutes, not a hang.)*
 
-## How it works
+The 4×4 census is exhaustive and takes several minutes. Long-running solves must produce a result or an explicit honest abort; a timeout is never converted into a claim.
 
-- **Legality is counted connectivity** — Tromp-Taylor rules: a position is legal iff every maximal
-  same-colour group has a liberty. Groups are counted connected components (breadth-first flood over
-  the flat board, a visited ledger, an exact stack — no recursion, no heuristics).
-- **A point is the colour count** — three states, empty/black/white — `c = 3` itself.
-- **The census is the engine's own forward enumeration**; the oracle lives on the comparison side
-  only, and any disagreement halts the run.
+## Papers
 
-## The rule that governs this workspace
-
-**Read [`AGENT.md`](AGENT.md) first.** Every derivation and expansion must route through the engine
-and return to this validated state with **no law or constraint violation** — counted or forced
-values only, everything traced to the One, the `forced_to_be` oracle checks and the honest
-node-budget abort left intact. A learned heuristic that plays well is a regression, because the
-whole point is that this engine carries none.
-
-## Papers & findings
-
-- **[Symmetric Go: Solving Spatial Command on the 3D Lattice](papers/Symmetric_Go_Solving_Spatial_Command_on_the_3D_Lattice.md)**
-- **[Zero-Parameter Geometric Go: Superhuman Performance](papers/Zero_Parameter_Geometric_Go_Superhuman_Performance.md)**
-- Full match record: [`tools/GO_MATCHES.md`](tools/GO_MATCHES.md)
+- [Symmetric Go: Exact Counted Legality and Small-Board Solving](papers/Symmetric_Go_Solving_Spatial_Command_on_the_3D_Lattice.md)
+- [Fold Go: Exact Certification and a 2–0 9×9 GNU Go Development Result](papers/Zero_Parameter_Geometric_Go_Superhuman_Performance.md)
 
 ## Layout
 
-| Path | What |
-|------|------|
-| `constants/fold_go.ep` | the engine: counted legality, census, exact solver |
-| `foundation/*.ep` | exact integers/fractions, the One and the fold, the enforcement guards |
-| `tests/fold_go_census.ep` | the census, certified against the Tromp oracle |
-| `tests/fold_go_solve*.ep` | the exact solver and the 3×3 endpoint |
-| `tools/go_*_referee.py` | independent Python cross-checks |
-| `tools/measure_go.py`, `GO_MATCHES.md` | play harness + match record |
-| `compiler/` | bundled ErnosPlain toolchain (incl. `src/transpile_go.rs`; `ernos` also on PATH) |
+| Path | Purpose |
+|---|---|
+| `constants/fold_go.ep` | counted legality, census, and exact solver |
+| `foundation/*.ep` | theorem-forced One/fold, exact arithmetic, enforcement |
+| `tests/fold_go_*.ep` | exact certification programs |
+| `tools/go_*_referee.py` | independent Python checks |
+| `tools/measure_go.py` | bounded competitive development harness |
+| `tools/RESULTS_INDEX.md` | evidence, hashes, accepted/refused claims |
+| `tools/*.log`, `gtp_logs/` | preserved raw transcripts |
 
----
-
-Part of the **[Smithian Fold Theory of Everything](https://github.com/MettaMazza/Smithian-Fold-Theory-Of-Everything)** — one machine-checked, self-proven theorem (*there is no nothing*), zero parameters, with the One and fold forced rather than assumed.
+Read [AGENT.md](AGENT.md) before changing the system. Every admitted mechanism must be directly forced, forward-forced, or constitutionally re-derived, and every violation must halt.

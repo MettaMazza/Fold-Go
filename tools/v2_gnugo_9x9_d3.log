@@ -1,0 +1,415 @@
+=== SFT Go Tournament Referee ===
+Starting 2-round match on 9x9 board (search ceiling 3)...
+Opponent command: gnugo --mode gtp
+>>> SEND: boardsize 9
+<<< RECV: ['=']
+>>> SEND: clear_board
+<<< RECV: ['=']
+>>> SEND: play B C7
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= E5']
+>>> SEND: play B C8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C4']
+>>> SEND: play B D5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= D4']
+>>> SEND: play B E6
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F5']
+>>> SEND: play B G5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= G6']
+>>> SEND: play B F6
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= G4']
+>>> SEND: play B H5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= G7']
+>>> SEND: play B C5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F3']
+>>> SEND: play B E4
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F4']
+>>> SEND: play B B4
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B3']
+>>> SEND: play B C3
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= D3']
+>>> SEND: play B B2
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C2']
+>>> SEND: play B A3
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B5']
+>>> SEND: play B C3
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B6']
+>>> SEND: play B A4
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B1']
+>>> SEND: play B A2
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C1']
+>>> SEND: play B H7
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F7']
+>>> SEND: play B E7
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= E8']
+>>> SEND: play B D2
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B3']
+>>> SEND: play B G8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C3']
+>>> SEND: play B F8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= H4']
+>>> SEND: play B E9
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C6']
+>>> SEND: play B D8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= D6']
+>>> SEND: play B H3
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= J4']
+>>> SEND: play B H2
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= G2']
+>>> SEND: play B D5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= J5']
+>>> SEND: play B H6
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B7']
+>>> SEND: play B A5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B8']
+>>> SEND: play B G3
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= E3']
+>>> SEND: play B A8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B9']
+>>> SEND: play B F2
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= H1']
+>>> SEND: play B G1
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= E1']
+>>> SEND: play B H8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= J6']
+>>> SEND: play B C9
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= J7']
+>>> SEND: play B J8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= D7']
+>>> SEND: play B J3
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= E2']
+>>> SEND: play B A7
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= J1']
+>>> SEND: play B G9
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= PASS']
+>>> SEND: play B H9
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= PASS']
+>>> SEND: play B J9
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= PASS']
+>>> SEND: play B G7
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= PASS']
+>>> SEND: play B J2
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F1']
+>>> SEND: play B D9
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= PASS']
+>>> SEND: play B F9
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= PASS']
+>>> SEND: play B E8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= PASS']
+>>> SEND: play B A6
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C5']
+>>> SEND: play B G2
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= PASS']
+>>> SEND: play B A1
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= PASS']
+>>> SEND: play B H1
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= PASS']
+>>> SEND: play B F7
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= PASS']
+>>> SEND: play B pass
+<<< RECV: ['=']
+>>> SEND: quit
+<<< RECV: ['=']
+Round 1: SFT=Black | Score B=46 W=40 | Winner: SFT
+>>> SEND: boardsize 9
+<<< RECV: ['=']
+>>> SEND: clear_board
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= E5']
+>>> SEND: play W E6
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= F5']
+>>> SEND: play W E7
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= D5']
+>>> SEND: play W E4
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= G3']
+>>> SEND: play W G4
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= F4']
+>>> SEND: play W H3
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= F2']
+>>> SEND: play W G2
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= F3']
+>>> SEND: play W G1
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= H4']
+>>> SEND: play W H5
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= G5']
+>>> SEND: play W J4
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= H6']
+>>> SEND: play W J5
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= F1']
+>>> SEND: play W H1
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= C7']
+>>> SEND: play W C6
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= D6']
+>>> SEND: play W C8
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= B7']
+>>> SEND: play W E2
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= J2']
+>>> SEND: play W G6
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= H7']
+>>> SEND: play W H8
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= G8']
+>>> SEND: play W F8
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= G7']
+>>> SEND: play W G4
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= H2']
+>>> SEND: play W A7
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= D8']
+>>> SEND: play W D9
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= B8']
+>>> SEND: play W B9
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= D7']
+>>> SEND: play W G9
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= J8']
+>>> SEND: play W J3
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= F6']
+>>> SEND: play W J1
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= E8']
+>>> SEND: play W J7
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= J6']
+>>> SEND: play W A8
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= E9']
+>>> SEND: play W B6
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= C9']
+>>> SEND: play W D2
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= B4']
+>>> SEND: play W C4
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= D4']
+>>> SEND: play W B3
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= C3']
+>>> SEND: play W B5
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= C2']
+>>> SEND: play W A4
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= B2']
+>>> SEND: play W A2
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= B1']
+>>> SEND: play W D3
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= E3']
+>>> SEND: play W J9
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= F9']
+>>> SEND: play W J7
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= E1']
+>>> SEND: play W C1
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= D1']
+>>> SEND: play W A1
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= A6']
+>>> SEND: play W D2
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= D3']
+>>> SEND: play W A5
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= PASS']
+>>> SEND: play W H9
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= PASS']
+>>> SEND: play W A9
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= PASS']
+>>> SEND: play W C5
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= PASS']
+>>> SEND: play W H4
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= PASS']
+>>> SEND: play W A6
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= PASS']
+>>> SEND: play W H2
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= PASS']
+>>> SEND: play W A3
+<<< RECV: ['=']
+>>> SEND: genmove B
+<<< RECV: ['= PASS']
+>>> SEND: play W pass
+<<< RECV: ['=']
+>>> SEND: quit
+<<< RECV: ['=']
+Round 2: SFT=White | Score B=39 W=47 | Winner: SFT
+
+Tournament complete!
+Final Score: SFT 2 - 0 Opponent
+Match ledger written to tools/GO_MATCHES.md.

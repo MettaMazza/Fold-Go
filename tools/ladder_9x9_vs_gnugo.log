@@ -1,0 +1,115 @@
+=== SFT Go Tournament Referee ===
+Starting 4-round match on 9x9 board (search ceiling 3)...
+Opponent command: gnugo --mode gtp
+>>> SEND: boardsize 9
+<<< RECV: ['=']
+>>> SEND: clear_board
+<<< RECV: ['=']
+>>> SEND: play B E5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C3']
+>>> SEND: play B C4
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B4']
+>>> SEND: play B C5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= G7']
+>>> SEND: play B D3
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C2']
+>>> SEND: play B G6
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= H7']
+>>> SEND: play B G8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F8']
+>>> SEND: play B E8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= E7']
+>>> SEND: play B F9
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F7']
+>>> SEND: play B D8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= D7']
+>>> SEND: play B B2
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C7']
+>>> SEND: play B D2
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= G3']
+>>> SEND: play B B3
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F6']
+>>> SEND: play B C1
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F5']
+>>> SEND: play B D6
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B6']
+>>> SEND: play B H8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= J8']
+>>> SEND: play B H9
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C8']
+>>> SEND: play B A4
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B5']
+>>> SEND: play B E9
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F2']
+>>> SEND: play B G4
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F4']
+>>> SEND: play B H4
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= G5']
+>>> SEND: play B B8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B7']
+>>> SEND: play B H3
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= H2']
+>>> SEND: play B J2
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= H6']
+>>> SEND: play B H1
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= G2']
+>>> SEND: play B E4
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= A5']
+>>> SEND: play B A8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= A3']
+>>> SEND: play B A2
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= E2']

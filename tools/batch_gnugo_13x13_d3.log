@@ -1,0 +1,199 @@
+=== SFT Go Tournament Referee ===
+Starting 2-round match on 13x13 board (search ceiling 3)...
+Opponent command: gnugo --mode gtp
+>>> SEND: boardsize 13
+<<< RECV: ['=']
+>>> SEND: clear_board
+<<< RECV: ['=']
+>>> SEND: play B G7
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C6']
+>>> SEND: play B G8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= D10']
+>>> SEND: play B D11
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= E11']
+>>> SEND: play B D12
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= E12']
+>>> SEND: play B C10
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C9']
+>>> SEND: play B E10
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= D9']
+>>> SEND: play B F11
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F12']
+>>> SEND: play B B9
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C11']
+>>> SEND: play B G12
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= G11']
+>>> SEND: play B B11
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C12']
+>>> SEND: play B G10
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= H11']
+>>> SEND: play B E13
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F10']
+>>> SEND: play B C13
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B10']
+>>> SEND: play B B12
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C10']
+>>> SEND: play B F9
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= E9']
+>>> SEND: play B C7
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= D6']
+>>> SEND: play B F13
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= G5']
+>>> SEND: play B F5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= D7']
+>>> SEND: play B E8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F6']
+>>> SEND: play B H5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= G4']
+>>> SEND: play B G3
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= F4']
+>>> SEND: play B J11
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= H3']
+>>> SEND: play B J3
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= H2']
+>>> SEND: play B H12
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= H10']
+>>> SEND: play B B6
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B5']
+>>> SEND: play B A5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= A4']
+>>> SEND: play B C5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= B4']
+>>> SEND: play B B3
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= A6']
+>>> SEND: play B H9
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= J10']
+>>> SEND: play B K10
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= J12']
+>>> SEND: play B J13
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= K11']
+>>> SEND: play B L11
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= L12']
+>>> SEND: play B L13
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= L10']
+>>> SEND: play B K12
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= M11']
+>>> SEND: play B J11
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= K9']
+>>> SEND: play B M12
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= L11']
+>>> SEND: play B K8
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= L3']
+>>> SEND: play B E4
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= E5']
+>>> SEND: play B L4
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= J4']
+>>> SEND: play B M3
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= K4']
+>>> SEND: play B L2
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= C3']
+>>> SEND: play B K3
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= J5']
+>>> SEND: play B J6
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= K6']
+>>> SEND: play B L6
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= K7']
+>>> SEND: play B K5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= L5']
+>>> SEND: play B M5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= L8']
+>>> SEND: play B K5
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= H4']
+>>> SEND: play B L9
+<<< RECV: ['=']
+>>> SEND: genmove W
+<<< RECV: ['= M7']

@@ -3,7 +3,7 @@
 SFT Go Engine — Zero-Parameter, Fully SFT-Compliant
 
 Every evaluation is the exact share of the One: my_command / (my_command + their_command).
-Values are packed as num * 65536 + den (exact rational, cross-multiplication comparison).
+Values are packed as num * PACK_BASE (2^32) + den (exact rational, cross-multiplication comparison).
 No floats, no negatives, no irrationals, no arbitrary constants on the evaluation side.
 Infrastructure constants are powers of 2 (fold-natural). Hash uses prime 131.
 
@@ -21,13 +21,13 @@ class SFTGoBoard:
         self.size = size
         self.board = [0] * (size * size)  # 0: empty, 1: black, 2: white
         self.ko_square = None
-        self.history = []
+        self.history = set()  # position set: O(1) superko lookup instead of O(moves) scan
 
     def copy(self):
         nb = SFTGoBoard(self.size)
         nb.board = list(self.board)
         nb.ko_square = self.ko_square
-        nb.history = list(self.history)
+        nb.history = set(self.history)
         return nb
 
     def get_neighbors(self, idx):
@@ -84,7 +84,7 @@ class SFTGoBoard:
 
     def play_move(self, idx, color):
         if idx is None:  # Pass
-            self.history.append("".join(map(str, self.board)))
+            self.history.add("".join(map(str, self.board)))
             self.ko_square = None
             return True
         if not self.is_legal(idx, color):
@@ -99,11 +99,11 @@ class SFTGoBoard:
                     captured_indices.extend(grp)
         for c_idx in captured_indices:
             self.board[c_idx] = 0
-        if len(captured_indices) == 1:
-            self.ko_square = captured_indices[0]
-        else:
-            self.ko_square = None
-        self.history.append("".join(map(str, self.board)))
+        # Legality is pure positional superko (Tromp-Taylor): the history check in
+        # is_legal already forbids any repetition. No ad-hoc ko square — it was
+        # stricter than the real rules and could reject legal opponent moves.
+        self.ko_square = None
+        self.history.add("".join(map(str, self.board)))
         return True
 
     def get_legal_moves(self, color):
@@ -221,11 +221,20 @@ def counted_command(board):
                     else:
                         borders.add(board.board[n])
             if len(borders) == 1:
+                # Geometric Eye criterion (counted, no constants): an empty region
+                # is command only if it is tightly bound — bordered by one colour
+                # AND every point of the region touches that colour's stones.
+                # Open frameworks with unbound interior points count nothing.
                 border_color = list(borders)[0]
-                if border_color == 1:
-                    black_units += len(region)
-                elif border_color == 2:
-                    white_units += len(region)
+                tightly_bound = all(
+                    any(board.board[n] == border_color for n in board.get_neighbors(p))
+                    for p in region
+                )
+                if tightly_bound:
+                    if border_color == 1:
+                        black_units += len(region)
+                    elif border_color == 2:
+                        white_units += len(region)
 
     # Guarantee non-zero denominator (domain (0,1] — no zero).
     if black_units == 0 and white_units == 0:
@@ -235,15 +244,18 @@ def counted_command(board):
     return black_units, white_units
 
 
+PACK_BASE = 1 << 32  # 4294967296 — the 2^32 domain the papers specify
+
+
 def pack_value(num, den):
-    """Pack a fraction num/den into num * 65536 + den."""
-    return num * 65536 + den
+    """Pack a fraction num/den into num * PACK_BASE + den."""
+    return num * PACK_BASE + den
 
 
 def unpack_value(packed):
     """Unpack into (num, den)."""
-    den = packed % 65536
-    num = packed // 65536
+    den = packed % PACK_BASE
+    num = packed // PACK_BASE
     return num, den
 
 
@@ -401,7 +413,7 @@ pass_aborted = [0]
 
 
 # ==================== ALPHA-BETA SEARCH (SFT FRACTION-PAIR) ====================
-# Values are packed as num * 65536 + den.
+# Values are packed as num * PACK_BASE (2^32) + den.
 # Comparison is by cross-multiplication: a/b > c/d ⟺ a*d > c*b.
 # The search mirrors the chess engine's search_value exactly.
 
@@ -412,7 +424,7 @@ def invert_value(packed):
 
 
 def alphabeta_sft(board, depth, alpha, beta, to_move_color, last_passed=False):
-    """SFT-compliant alpha-beta. Returns packed value (num * 65536 + den)."""
+    """SFT-compliant alpha-beta. Returns packed value (num * PACK_BASE (2^32) + den)."""
     # Hard node bound
     nodes_left[0] -= 1
     if nodes_left[0] < 0:
@@ -523,65 +535,73 @@ def alphabeta_sft(board, depth, alpha, beta, to_move_color, last_passed=False):
     return best
 
 
-# ==================== MOVE SELECTION (ITERATIVE DEEPENING) ====================
-# Mirrors the chess engine's search_best_seen exactly:
-# Depth 1, 2, 3, ... up to ceiling 8, under a 2^19 node budget.
-# The best move from the deepest COMPLETED pass plays.
+# ==================== MOVE SELECTION (ITERATIVE DEEPENING, PARALLEL ROOT) ====================
+# Depth 1, 2, 3, ... up to the ceiling; the best move from the deepest COMPLETED
+# pass plays. The root candidates are partitioned across worker processes — one
+# per CPU core, a counted structural resource, not a tuned constant. Each
+# candidate subtree is searched independently over the FULL value window with a
+# fresh table and a fresh 2^19 node budget, so every returned value is the exact
+# minimax value of that subtree. The parent reduces by exact cross-multiplication
+# comparison in fixed candidate order (lowest board index wins ties), so the
+# chosen move is identical regardless of worker scheduling — deterministic.
+
+import multiprocessing as _mp
+
+_POOL = [None]
+
+
+def _get_pool():
+    if _POOL[0] is None:
+        ctx = _mp.get_context("fork")
+        _POOL[0] = ctx.Pool(_mp.cpu_count())
+    return _POOL[0]
+
+
+def _eval_root_candidate(task):
+    board, color, m, depth = task
+    # Fresh, task-local search state: no cross-task reuse (determinism).
+    tt_gen[0] += 1
+    nodes_left[0] = NODE_BUDGET
+    pass_aborted[0] = 0
+    for i in range(len(history_table)):
+        history_table[i] = 0
+    for km in killer_moves:
+        km[0] = -1
+        km[1] = -1
+    nb = board.copy()
+    nb.play_move(m, color)
+    child_val = alphabeta_sft(nb, depth - 1, invert_value(VALUE_CEILING),
+                              invert_value(VALUE_FLOOR), 3 - color, False)
+    if pass_aborted[0] == 1:
+        return (m, None)  # honest abort: this pass is incomplete
+    return (m, invert_value(child_val))
+
 
 def select_sft_move(board, color, ceiling=8):
-    """Select the best move using SFT iterative deepening."""
+    """Select the best move using SFT iterative deepening with a parallel root."""
     legal_moves = board.get_legal_moves(color)
     if not legal_moves:
         return None
     if len(legal_moves) == 1:
         return legal_moves[0]
 
-    candidates = get_dynamic_sparse_moves(board, color, legal_moves)
-
-    # Fresh TT generation
-    tt_gen[0] += 1
-    nodes_left[0] = NODE_BUDGET
-    pass_aborted[0] = 0
-    
-    # Clear move ordering heuristics for the new search
-    for i in range(len(history_table)):
-        history_table[i] = 0
-    for i in range(len(killer_moves)):
-        killer_moves[i][0] = -1
-        killer_moves[i][1] = -1
-
+    candidates = sorted(get_dynamic_sparse_moves(board, color, legal_moves))
     best_move = candidates[0]
-    best_val = VALUE_FLOOR
 
+    pool = _get_pool()
     for depth in range(1, ceiling + 1):
-        if pass_aborted[0] == 1:
-            break
-
+        results = pool.map(_eval_root_candidate,
+                           [(board, color, m, depth) for m in candidates])
+        if any(v is None for _, v in results):
+            break  # a subtree hit its node budget — keep the last completed pass
         depth_best_move = None
         depth_best_val = VALUE_FLOOR
-        a = VALUE_FLOOR
-
-        for m in candidates:
-            if pass_aborted[0] == 1:
-                break
-            nb = board.copy()
-            nb.play_move(m, color)
-            child_val = alphabeta_sft(nb, depth - 1, invert_value(VALUE_CEILING),
-                                       invert_value(a), 3 - color, False)
-            if pass_aborted[0] == 1:
-                break
-            my_val = invert_value(child_val)
-
-            if value_greater(my_val, depth_best_val):
-                depth_best_val = my_val
+        for m, v in results:  # fixed order: lowest index wins exact ties
+            if value_greater(v, depth_best_val):
+                depth_best_val = v
                 depth_best_move = m
-            if value_greater(my_val, a):
-                a = my_val
-
-        if pass_aborted[0] == 0 and depth_best_move is not None:
-            # This pass completed — record its result.
+        if depth_best_move is not None:
             best_move = depth_best_move
-            best_val = depth_best_val
 
     return best_move
 
@@ -798,8 +818,10 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8):
 
         passes = 0
         moves_played = 0
-        # 128 = 2^7 (fold-natural max moves).
-        while passes < 2 and moves_played < 128:
+        # Games end on two consecutive passes (the rules). Safety bound is counted
+        # from the board itself: 2 * N^2 moves, never a truncation of normal play.
+        max_moves = 2 * size * size
+        while passes < 2 and moves_played < max_moves:
             current_player = 1 if moves_played % 2 == 0 else 2
 
             if current_player == sft_color:
@@ -819,7 +841,11 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8):
                 if len(parts) > 1:
                     move_str = parts[1]
                 move = gtp_to_index(move_str, size)
-                board.play_move(move, opp_color)
+                if not board.play_move(move, opp_color):
+                    # Honest abort: a desynced referee must halt, never score fiction.
+                    print(f"REFEREE HALT: opponent move {move_str} rejected by the "
+                          f"internal rules — board desync, round void.")
+                    raise SystemExit(1)
                 if move is None:
                     passes += 1
                 else:

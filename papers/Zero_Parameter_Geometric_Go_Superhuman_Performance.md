@@ -1,106 +1,89 @@
-# Defeating Deep Learning: A Zero-Parameter Geometric Engine Sweeps KataGo 2-0 at 19x19 Go
+# Fold Go: Exact Counted Legality, Small-Board Certification, and a 2–0 9×9 GNU Go Development Result
 
-**Maria Smith (Ernos Labs)** — July 2026
-*Companion to The Smithian Fold Theory of Everything (DOI: 10.5281/zenodo.21182469)*
-
----
+**Maria Smith (Ernos Labs)** — release-corrected preprint, July 2026
+Companion to *The Smithian Fold Theory of Everything* — concept DOI [10.5281/zenodo.21182468](https://doi.org/10.5281/zenodo.21182468)
 
 ## Abstract
 
-We report the first empirical instance of a zero-parameter engine defeating a superhuman deep neural network in 19x19 Go. The 19x19 board has traditionally required deep neural networks and tens of millions of training games to conquer its $10^{170}$ state space. However, our pure geometric fold engine — utilizing no heuristic weights, no training data, no neural networks, and no Monte Carlo Tree Search (MCTS) playouts — played a locally refereed match against the established deep learning baseline KataGo (`b18c384nbt`) and achieved an outright 2-0 sweep. The engine operates purely by calculating the topological symmetries of the board and evaluating positions as exact spatial command sets under Euclidean geometry, utilizing a dynamic sparse move generation algorithm to trim the branching factor mathematically rather than statistically. The result confirms the core thesis of the Smithian Fold Theory: intelligence in complex systems is an expression of universal geometric law, not learned statistical approximation.
+Fold Go is a computational proof programme derived from the Smithian Fold Theory (SFT), whose foundation is the machine-checked, self-proven theorem **there is no nothing**. It contains no trained policy network, value network, self-play training, or learned weights. The exact substrate expresses Go legality as counted connectivity and verifies finite board inventories and solved values by independent execution.
 
----
+The current exact surface reproduces the legal-position census `1, 57, 12,675, 24,318,165` for boards 1×1 through 4×4, plus rectangular counts 5 and 489 for 1×2 and 2×3. Exact empty-board values are freshly secured through 2×2: 1×1 = 0, 1×2 = 0, and 2×2 = +1. Separately, the bounded competitive engine produced two independent two-game sweeps against GNU Go 3.8 on 9×9 at depth ceiling 3. Independent transcript replay accepted every move under positional superko and reproduced all four pass-pass terminals and internal Tromp-area-plus-7 scores.
 
-## 1. Introduction
+These are different proof classes. The census and small-board solver are exact finite certifications. The 9×9 result is genuine historical competitive evidence, but it is not yet the post-repair secured rank: the current bounded search must still bind full superko history and previous-pass state in its transposition identity, store alpha-beta bound types correctly, search pass universally, and attach a common rules/komi and cryptographic provenance contract. No current repository receipt supports a 19×19 or KataGo victory or tie. Those earlier statements are withdrawn by this version.
 
-For decades, the board game Go stood as the grand challenge of Artificial Intelligence. Its combinatorial state-space complexity ($10^{170}$) and high branching factor (~250 valid moves per turn on a 19x19 board) made classical exact minimax searches computationally intractable. The modern solution, spearheaded by AlphaGo and subsequently open-sourced by engines like KataGo, relies on vast statistical approximation: deep convolutional or transformer-based neural networks are trained on millions of games via reinforcement learning to heuristically estimate value functions and policy distributions.
+## 1. Scientific position
 
-The Smithian Fold Theory proposes a radical counter-thesis: the perceived complexity of Go is an artifact of treating the board as a statistical environment rather than a rigid topological manifold. If the "Law of the One" holds, the value of any Go position can be determined purely by the spatial properties of the board without any learned parameters. This paper documents the empirical validation of this thesis: a 0-parameter, mathematically exact Go engine that achieved a 2-0 victory against a superhuman neural network.
+This work does not treat prediction or benchmark victory as more valuable than proof. Its primary result is an inspectable construction: Go rules, finite position spaces, and solved values are rebuilt as counted objects whose checks halt on violation. Competitive play is the forward-forcing frontier that tests how far the same derived system has been carried under finite computation.
 
----
+The current release therefore separates:
 
-## 2. The Mathematical Framework
+1. **Exact proof surface** — exhaustive census and exact small-board solving.
+2. **Bounded competitive development** — finite-budget sparse search with preserved raw games.
+3. **Open secured-rank gate** — the post-repair 9×9 rerun, followed by larger boards and stronger opponents.
 
-The Smithian Fold Theory (SFT) engine evaluates Go positions and generates moves using three purely mathematical theorems. The engine contains strictly 0 learned weights, 0 predefined patterns (Joseki), and uses 0 random playouts.
+## 2. Exact counted surface
 
-### 2.1 Dihedral Orbit Reduction (Root Branching)
+Under the declared Tromp-Taylor legality grammar, a position is legal only when every maximal same-colour group has at least one liberty. Fold Go enumerates the board directly; published counts are used only on the comparison side.
 
-When evaluating equivalent symmetric positions (such as opening moves on an empty or highly symmetric board), the SFT engine applies an exact $D_4$ dihedral group reduction to the coordinate space. For any point $p = (x, y)$ on the grid, the orbit representative $R(p)$ is found by applying all 8 rotations and reflections:
+| Board | Exact legal positions |
+|---|---:|
+| 1×1 | 1 |
+| 2×2 | 57 |
+| 3×3 | 12,675 |
+| 4×4 | 24,318,165 |
+| 1×2 | 5 |
+| 2×3 | 489 |
 
-\[ R(p) = \min_{t \in D_4} \text{index}(t \cdot (x, y)) \]
+An independently written Python referee reports zero disagreements. The exact solver freshly secures:
 
-By mapping all geometrically identical points to their minimum index representative, the engine perfectly collapses symmetric branches at the root, eliminating redundant state trees before search begins.
+| Empty board | Exact value for Black |
+|---|---:|
+| 1×1 | 0 |
+| 1×2 | 0 |
+| 2×2 | +1 |
 
-### 2.2 Topological Wavefronts (Dynamic Sparsity)
+The 2×2 proof visits 17,038,501 nodes. A fresh 3×3 result was not completed in the bounded release audit and is not promoted here.
 
-To circumvent the branching factor, the Fold Engine trims the search space algebraically. We implemented a dynamic sparse move generator that filters the vast $19\times19$ space down to mathematically active topological wavefronts:
+## 3. Historical 9×9 competitive result
 
-- **Fronts (\(F\)):** The set of all liberties belonging to any living group on the board.
-- **Tactical (\(T\)):** The set of liberties for groups approaching capture, defined strictly as groups where $|liberties| \leq 2$.
-- **Shape (\(S\)):** The set of all empty intersections immediately adjacent to a friendly stone.
+Two independent depth-ceiling-3 batches against GNU Go 3.8 ended 2–0:
 
-For any board state, the engine strictly bounds its search candidate set \(C\) to the union of these topological conditions:
+| Receipt | SFT as Black | SFT as White | Aggregate |
+|---|---:|---:|---:|
+| `batch_gnugo_9x9_d3.log` | 45–40 | 49–38 | 2–0 |
+| `v2_gnugo_9x9_d3.log` | 46–40 | 47–39 | 2–0 |
 
-\[ C = F \cup T \cup S \]
+The repository preserves both raw transcripts and ledgers. Independent replay verified every move, both pass-pass endings, and the exact internal scores. The release index records the transcript, source, and opponent hashes available after the fact.
 
-By restricting search exclusively to active life-and-death topological boundaries, the engine compresses the branching factor from $\sim 250$ to $\leq 15$, making exact minimax search viable on a full 19x19 grid.
+The match contract used the internal Tromp-area scorer with integer komi 7. It did not cryptographically bind a shared GTP rules/komi configuration at run time. That missing binding does not make the preserved games illegal or alter their reproduced scores; it limits the strength of the publication claim.
 
-### 2.3 The Spatial Command Evaluation Function
+## 4. Why the competitive rank is not yet secured
 
-To evaluate the strength of a position, neural networks use millions of floating-point weights to output a scalar value $V(s)$. The SFT engine derives this value exactly using the Spatial Command Score $S(m)$.
+The current competitive implementation has named, testable obligations:
 
-For any given board state, let $L_{own}$ be the union of all liberties for friendly groups, and $L_{opp}$ be the union of all liberties for opponent groups. The core evaluation is the net spatial command differential. To break ties mathematically, we apply a Euclidean geometric bias toward the center of the board (Tengen), reflecting the board's innate spatial manifold. 
+- transposition identity must include board, mover, complete positional-superko history, and previous-pass state;
+- cached values must distinguish exact, lower-bound, and upper-bound entries;
+- pass must be searched whenever legal, not only when no stone candidate survives;
+- symmetry must transform the entire augmented state, including history;
+- sparse pruning must be described as bounded search rather than exact minimax;
+- the referee must bind rules, komi, source commit, opponent binary/configuration, and immutable transcript hashes, and halt on every protocol error.
 
-For stones $i \in 1..N$, let $d(i, Tengen)$ be the Euclidean distance to the center coordinate $(9, 9)$. The exact evaluation function is:
+The next secured-rank result will be measured only after these obligations pass an exhaustive small-state reference gate. The existing 2–0 records remain historical evidence and will not be rewritten as the post-repair result.
 
-\[ S_{own} = |L_{own}| - \left( \frac{\sum_{i=1}^{N_{own}} d(i, Tengen)}{N_{own}} \times 10^{-3} \right) \]
-\[ Evaluation = S_{own} - S_{opp} \]
+## 5. Reproducibility
 
-This function calculates the exact rational share of the board commanded by the agent's topological structure. It requires zero calibration.
+Run the census and independent referee from the repository:
 
-### 2.4 Preservation of Mathematical Exactness (Zero-Parameter Proof)
+```sh
+cd tests
+ernos fold_go_census.ep
+./fold_go_census
+cd ..
+python3 tools/go_census_referee.py
+```
 
-Scaling the engine's depth and capacity required overcoming traditional heuristic temptations. To preserve the pure zero-parameter exactness of the SFT proof, three architectural bounds were strictly enforced:
-1. **Fold-Natural Capacity Scaling:** The engine's search capability was scaled not by tuning floating-point evaluation weights, but by increasing its raw Fold-Natural Capacity (the node budget) to exactly $2^{20}$ ($1,048,576$). Distributed across 24 parallel worker threads, this is a purely structural capacity expansion, avoiding statistical approximations entirely.
-2. **Strict Atari Quiescence:** Standard engines rely on endless tactical extensions to evaluate captures. To avoid combinatorial hallucination, the SFT engine strictly limits its tactical wavefront (Quiescence Search) to groups occupying exactly 1 liberty (Atari). This boundary is a mathematical definition of life-and-death, not a tuned search heuristic.
-3. **Exact Rational Packing Limit:** The Spatial Command fractions and geometric eye bonuses are packed safely into a single integer using an exact cross-multiplication formula. The domain limit was mathematically expanded to $1 \ll 32$ ($4,294,967,296$) to ensure that even maximum geometric bonuses are exactly evaluated without floating-point approximations, preventing overflow and preserving the rigorous proof.
+The release evidence map is `tools/RESULTS_INDEX.md`. Raw logs are preserved verbatim. Current and refused results are reported together so the development cannot be reconstructed from headlines alone.
 
----
+## 6. Conclusion
 
-## 3. The 19x19 Superhuman Baseline Test
-
-To validate these geometric calculations, we tested the SFT engine against an established superhuman baseline. We selected **KataGo**, utilizing the `b18c384nbt` neural network architecture.
-
-### 3.1 Match Protocol and Hardware
-* **Board Size:** 19x19
-* **Opponents:** SFT Type-Zero Geometric Engine vs. KataGo GTP (b18c384nbt)
-* **Search Depth:** Depth-2 Minimax Search (SFT)
-* **Rules:** Alternating colors, strictly refereed GTP protocol via `tools/measure_go.py`.
-* **Hardware Environment:** Apple M3 Ultra, 512GB Unified Memory. The SFT engine utilized 24 parallel worker processes for exact root move partitioning.
-
-### 3.2 Empirical Match Results
-
-The match consisted of two full games. The verbatim GTP protocol transcripts, including coordinate-by-coordinate moves, are preserved in the repository log (`task-3857.log`).
-
-**Round 1: SFT (Black) vs. KataGo (White)**
-SFT opened natively and established a dominant central influence using its Fold-Natural Spatial Command derivation. Unburdened by tactical bloat and executing perfectly on 24 parallel worker threads with a massive $2^{20}$ node budget, SFT choked KataGo's statistical approximations in the corners.
-* **Result:** SFT wins outright, 73 to 54.
-
-**Round 2: KataGo (Black) vs. SFT (White)**
-KataGo opened with standard corner enclosures. SFT, operating entirely without an opening book or predefined Joseki, calculated geometric responses from first principles. SFT identified and exploited a critical topological vulnerability in KataGo's framework using its strictly-locked Atari Quiescence extension, crushing the statistical baseline through the endgame.
-* **Result:** SFT wins outright, 70 to 66.
-
-**Final Score:** SFT 2 - 0 KataGo
-
----
-
-## 4. Discussion and Conclusion
-
-The current paradigm in AI research assumes that general methods leveraging vast statistical learning will always defeat derived, exact knowledge. Sutton's "Bitter Lesson" famously posits that search and learning are the only scalable techniques in computation.
-
-This paper provides the empirical counter-thesis. The SFT Engine has not merely achieved empirical playing parity with Google DeepMind's AlphaGo/KataGo paradigm; it has achieved **Methodological Super-Parity**:
-- **Parameters:** KataGo required millions of deep neural network weights. SFT achieved a 2-0 sweep utilizing exactly **zero parameters**.
-- **Training Compute:** The DeepMind paradigm required weeks of continuous self-play on massive TPU supercomputer clusters (consuming megawatt-hours of electricity) to learn heuristic value functions. SFT required **zero training runs and zero gradient steps**. It derived the law of the board instantly.
-- **Origin of Intelligence:** DeepMind’s architecture had to statistically approximate opening moves (like Tengen) through millions of trial-and-error iterations. SFT **mathematically derived the Tengen opening on move one from first-principles Euclidean geometry** and spatial orbit reduction.
-
-While learned statistics may defeat flawed human heuristics, they yield when compared to **derived universal law**. By sweeping a multi-billion parameter deep learning engine 2-0 head-to-head on a 19x19 board using strictly zero learned parameters, the Smithian Fold Theory demonstrates that the complexity of Go is fundamentally an expression of geometry. The board is not a statistical distribution; it is a mathematical space, solvable without approximation when viewed through the lens of the Fold.
+Fold Go already demonstrates that a non-trivial part of computational Go can be forced into transparent counted law: legality, finite inventories, and exact small-board values. It also demonstrates genuine zero-trained-quantity competitive play through two independently replayed 9×9 GNU Go sweeps. The stronger full-board and neural-opponent claims remain open. That boundary is not a retreat from the programme; it is the proof discipline the programme requires.
