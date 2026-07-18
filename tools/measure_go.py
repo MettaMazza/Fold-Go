@@ -859,6 +859,14 @@ class GTPClient:
                     move = None
                 self.sim_board.play_move(move, color)
                 return f"= {index_to_gtp(move, self.size)}"
+            elif cmd_str == "protocol_version":
+                return "= 2"
+            elif cmd_str == "name":
+                return "= deterministic-lowest-legal"
+            elif cmd_str == "version":
+                return "= fold-counted-v1"
+            elif cmd_str == "list_commands":
+                return "= boardsize\nclear_board\nkomi\nplay\ngenmove\nquit"
             return "= "
 
     def close(self):
@@ -925,17 +933,29 @@ def _git_commit(root):
 
 def _opponent_identity(opponent_cmd):
     if not opponent_cmd:
-        return {"kind": "deterministic-fallback", "command": None,
-                "executable": None, "executable_sha256": None}
-    executable = shutil.which(opponent_cmd[0])
-    if executable is None:
-        raise FileNotFoundError(f"opponent executable not found: {opponent_cmd[0]}")
-    return {
-        "kind": "external-gtp",
-        "command": list(opponent_cmd),
-        "executable": str(Path(executable).resolve()),
-        "executable_sha256": _sha256_file(executable),
-    }
+        identity = {"kind": "deterministic-fallback", "command": None,
+                    "executable": None, "executable_sha256": None}
+    else:
+        executable = shutil.which(opponent_cmd[0])
+        if executable is None:
+            raise FileNotFoundError(f"opponent executable not found: {opponent_cmd[0]}")
+        identity = {
+            "kind": "external-gtp",
+            "command": list(opponent_cmd),
+            "executable": str(Path(executable).resolve()),
+            "executable_sha256": _sha256_file(executable),
+        }
+    # Bind what the executable itself reports, not only its path and bytes.
+    # This is a preflight identity receipt; it does not authorize a match.
+    client = GTPClient(opponent_cmd)
+    try:
+        identity["gtp_identity"] = {
+            command: client.send(command)
+            for command in ("protocol_version", "name", "version", "list_commands")
+        }
+    finally:
+        client.close()
+    return identity
 
 
 def _json_bytes(record):
@@ -956,7 +976,7 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8,
     root = Path(__file__).resolve().parents[1]
     source_path = Path(__file__).resolve()
     registration = {
-        "schema": "fold-go-match-registration/v1",
+        "schema": "fold-go-match-registration/v2",
         "status": "registered",
         "registered_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_commit": _git_commit(root),

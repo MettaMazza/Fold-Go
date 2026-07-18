@@ -26,10 +26,17 @@ def verify_match(directory: Path, require_current_source: bool = True) -> dict:
     registration_sha = sha256(registration_path)
     if match.get("registration_sha256") != registration_sha:
         raise RuntimeError("match registration hash mismatch")
-    if registration.get("schema") != "fold-go-match-registration/v1":
+    if registration.get("schema") not in {
+            "fold-go-match-registration/v1", "fold-go-match-registration/v2"}:
         raise RuntimeError("unsupported match registration")
     if match.get("schema") != "fold-go-match-receipt/v1":
         raise RuntimeError("unsupported match receipt")
+    if registration.get("schema") == "fold-go-match-registration/v2":
+        identity = registration.get("opponent", {}).get("gtp_identity", {})
+        expected_commands = {"protocol_version", "name", "version", "list_commands"}
+        if set(identity) != expected_commands or \
+                any(not str(identity[name]).startswith("=") for name in expected_commands):
+            raise RuntimeError("registered opponent GTP identity is incomplete")
     if require_current_source:
         source = ROOT / registration["source_file"]
         if sha256(source) != registration["source_sha256"]:

@@ -130,6 +130,7 @@ class AugmentedStateTests(unittest.TestCase):
                     size=1, rounds=1, depth=0, komi=0, output_dir=output)
                 self.assertEqual(result["status"], "completed")
                 registration = (output / "registration.json").read_bytes()
+                registration_record = json.loads(registration)
                 game = (output / "game-001.json").read_bytes()
                 match = json.loads((output / "match.json").read_text())
                 game_record = json.loads(game)
@@ -139,6 +140,12 @@ class AugmentedStateTests(unittest.TestCase):
                 self.assertEqual(
                     match["games"][0]["sha256"], hashlib.sha256(game).hexdigest())
                 self.assertTrue(game_record["gtp_transcript"])
+                self.assertEqual(
+                    registration_record["schema"],
+                    "fold-go-match-registration/v2")
+                self.assertEqual(
+                    set(registration_record["opponent"]["gtp_identity"]),
+                    {"protocol_version", "name", "version", "list_commands"})
                 verification = verify_match(output)
                 self.assertEqual(verification["status"], "verified")
                 self.assertEqual(verification["verified_games"], 1)
