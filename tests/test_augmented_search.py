@@ -142,10 +142,12 @@ class AugmentedStateTests(unittest.TestCase):
                 self.assertTrue(game_record["gtp_transcript"])
                 self.assertEqual(
                     registration_record["schema"],
-                    "fold-go-match-registration/v2")
+                    "fold-go-match-registration/v3")
                 self.assertEqual(
                     set(registration_record["opponent"]["gtp_identity"]),
                     {"protocol_version", "name", "version", "list_commands"})
+                self.assertEqual(
+                    registration_record["opponent"]["command_file_bindings"], [])
                 verification = verify_match(output)
                 self.assertEqual(verification["status"], "verified")
                 self.assertEqual(verification["verified_games"], 1)
@@ -154,6 +156,23 @@ class AugmentedStateTests(unittest.TestCase):
                         size=1, rounds=1, depth=0, komi=0, output_dir=output)
         finally:
             go.select_sft_move = original_selector
+
+    def test_opponent_command_files_are_hash_bound(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            config = root / "engine.cfg"
+            model = root / "weights.bin"
+            config.write_text("rules=area\n")
+            model.write_bytes(b"counted-model-input")
+            bindings = go._command_file_bindings([
+                "engine", f"--config={config}", "--model", str(model),
+                "--threads", "8",
+            ])
+            self.assertEqual([row["argument_index"] for row in bindings], [1, 3])
+            self.assertEqual([row["sha256"] for row in bindings], [
+                hashlib.sha256(config.read_bytes()).hexdigest(),
+                hashlib.sha256(model.read_bytes()).hexdigest(),
+            ])
 
 
 if __name__ == "__main__":

@@ -27,16 +27,30 @@ def verify_match(directory: Path, require_current_source: bool = True) -> dict:
     if match.get("registration_sha256") != registration_sha:
         raise RuntimeError("match registration hash mismatch")
     if registration.get("schema") not in {
-            "fold-go-match-registration/v1", "fold-go-match-registration/v2"}:
+            "fold-go-match-registration/v1", "fold-go-match-registration/v2",
+            "fold-go-match-registration/v3"}:
         raise RuntimeError("unsupported match registration")
     if match.get("schema") != "fold-go-match-receipt/v1":
         raise RuntimeError("unsupported match receipt")
-    if registration.get("schema") == "fold-go-match-registration/v2":
+    if registration.get("schema") in {
+            "fold-go-match-registration/v2", "fold-go-match-registration/v3"}:
         identity = registration.get("opponent", {}).get("gtp_identity", {})
         expected_commands = {"protocol_version", "name", "version", "list_commands"}
         if set(identity) != expected_commands or \
                 any(not str(identity[name]).startswith("=") for name in expected_commands):
             raise RuntimeError("registered opponent GTP identity is incomplete")
+    if registration.get("schema") == "fold-go-match-registration/v3":
+        opponent = registration.get("opponent", {})
+        if not isinstance(opponent.get("invocation_cwd"), str) or \
+                not isinstance(opponent.get("command_file_bindings"), list):
+            raise RuntimeError("registered opponent command provenance is incomplete")
+        if require_current_source:
+            for binding in opponent["command_file_bindings"]:
+                path = Path(binding["resolved_path"])
+                if not path.is_file() or path.stat().st_size != binding["bytes"] or \
+                        sha256(path) != binding["sha256"]:
+                    raise RuntimeError(
+                        f"registered opponent command file drift: {binding['argument']}")
     if require_current_source:
         source = ROOT / registration["source_file"]
         if sha256(source) != registration["source_sha256"]:
@@ -111,6 +125,8 @@ def verify_match(directory: Path, require_current_source: bool = True) -> dict:
         "registration_sha256": registration_sha,
         "source_sha256": registration["source_sha256"],
         "opponent_executable_sha256": registration["opponent"]["executable_sha256"],
+        "opponent_command_files": len(
+            registration["opponent"].get("command_file_bindings", [])),
         "semantic_replay": "passed",
     }
 

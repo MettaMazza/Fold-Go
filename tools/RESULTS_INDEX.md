@@ -6,10 +6,13 @@ Agents do not define rank, validity, closure, or publication.
 
 ## Current sealed-match protocol
 
-New match registrations use `fold-go-match-registration/v2`. Before play, the
+New match registrations use `fold-go-match-registration/v3`. Before play, the
 harness binds the resolved opponent executable and SHA-256 and records the
 opponent's exact GTP responses to `protocol_version`, `name`, `version`, and
-`list_commands`. Each completed game remains hash-bound to that registration
+`list_commands`. It also records the invocation directory and binds every
+existing file supplied in the opponent command—including configuration and
+model files whether passed directly or as `--option=path`. Each completed game
+remains hash-bound to that registration
 and is semantically replayed by `tools/verify_match_receipts.py`. Verification
 checks the registered source against the current checkout by default; explicit
 archival mode permits replay of an older receipt while still verifying its

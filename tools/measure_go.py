@@ -931,6 +931,26 @@ def _git_commit(root):
         return None
 
 
+def _command_file_bindings(opponent_cmd):
+    """Hash every existing file supplied to the opponent command."""
+    bindings = []
+    for index, argument in enumerate((opponent_cmd or [])[1:], 1):
+        candidate = argument.split("=", 1)[1] if \
+            argument.startswith("-") and "=" in argument else argument
+        path = Path(candidate).expanduser()
+        if not path.is_file():
+            continue
+        resolved = path.resolve()
+        bindings.append({
+            "argument_index": index,
+            "argument": argument,
+            "resolved_path": str(resolved),
+            "bytes": resolved.stat().st_size,
+            "sha256": _sha256_file(resolved),
+        })
+    return bindings
+
+
 def _opponent_identity(opponent_cmd):
     if not opponent_cmd:
         identity = {"kind": "deterministic-fallback", "command": None,
@@ -944,7 +964,12 @@ def _opponent_identity(opponent_cmd):
             "command": list(opponent_cmd),
             "executable": str(Path(executable).resolve()),
             "executable_sha256": _sha256_file(executable),
+            "invocation_cwd": str(Path.cwd().resolve()),
+            "command_file_bindings": _command_file_bindings(opponent_cmd),
         }
+    if not opponent_cmd:
+        identity["invocation_cwd"] = str(Path.cwd().resolve())
+        identity["command_file_bindings"] = []
     # Bind what the executable itself reports, not only its path and bytes.
     # This is a preflight identity receipt; it does not authorize a match.
     client = GTPClient(opponent_cmd)
@@ -976,7 +1001,7 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8,
     root = Path(__file__).resolve().parents[1]
     source_path = Path(__file__).resolve()
     registration = {
-        "schema": "fold-go-match-registration/v2",
+        "schema": "fold-go-match-registration/v3",
         "status": "registered",
         "registered_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_commit": _git_commit(root),
