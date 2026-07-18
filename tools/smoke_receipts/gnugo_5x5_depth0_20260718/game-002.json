@@ -1,0 +1,352 @@
+{
+  "complete_history_sha256": "ae8282e1e4f23325b887994e1a40b2cbc4e6b414335fcea1106bfecd6043d7a4",
+  "final_position": "0101011111211212122201220",
+  "game": 2,
+  "gtp_transcript": [
+    {
+      "command": "boardsize 5",
+      "response": "="
+    },
+    {
+      "command": "clear_board",
+      "response": "="
+    },
+    {
+      "command": "komi 0",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= C3"
+    },
+    {
+      "command": "play W C4",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= B4"
+    },
+    {
+      "command": "play W B5",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= D4"
+    },
+    {
+      "command": "play W A5",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= A4"
+    },
+    {
+      "command": "play W C5",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= D5"
+    },
+    {
+      "command": "play W A5",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= B5"
+    },
+    {
+      "command": "play W C5",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= C4"
+    },
+    {
+      "command": "play W E5",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= E4"
+    },
+    {
+      "command": "play W A3",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= B3"
+    },
+    {
+      "command": "play W D3",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= E3"
+    },
+    {
+      "command": "play W A2",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= B2"
+    },
+    {
+      "command": "play W C2",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= B1"
+    },
+    {
+      "command": "play W D2",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= PASS"
+    },
+    {
+      "command": "play W E2",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= PASS"
+    },
+    {
+      "command": "play W C1",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= PASS"
+    },
+    {
+      "command": "play W D1",
+      "response": "="
+    },
+    {
+      "command": "genmove B",
+      "response": "= PASS"
+    },
+    {
+      "command": "play W pass",
+      "response": "="
+    }
+  ],
+  "moves": [
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "C3",
+      "ply": 1
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "C4",
+      "ply": 2
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "B4",
+      "ply": 3
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "B5",
+      "ply": 4
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "D4",
+      "ply": 5
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "A5",
+      "ply": 6
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "A4",
+      "ply": 7
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "C5",
+      "ply": 8
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "D5",
+      "ply": 9
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "A5",
+      "ply": 10
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "B5",
+      "ply": 11
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "C5",
+      "ply": 12
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "C4",
+      "ply": 13
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "E5",
+      "ply": 14
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "E4",
+      "ply": 15
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "A3",
+      "ply": 16
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "B3",
+      "ply": 17
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "D3",
+      "ply": 18
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "E3",
+      "ply": 19
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "A2",
+      "ply": 20
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "B2",
+      "ply": 21
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "C2",
+      "ply": 22
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "B1",
+      "ply": 23
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "D2",
+      "ply": 24
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "PASS",
+      "ply": 25
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "E2",
+      "ply": 26
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "PASS",
+      "ply": 27
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "C1",
+      "ply": 28
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "PASS",
+      "ply": 29
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "D1",
+      "ply": 30
+    },
+    {
+      "actor": "Opponent",
+      "colour": "B",
+      "move": "PASS",
+      "ply": 31
+    },
+    {
+      "actor": "SFT",
+      "colour": "W",
+      "move": "pass",
+      "ply": 32
+    }
+  ],
+  "registration_sha256": "5abd886824c11f171046d60a1b9513bcd9a4aad5f538fd84de8da29afd696c39",
+  "resigned_by": null,
+  "schema": "fold-go-game-receipt/v1",
+  "score": {
+    "black": 15,
+    "white_including_komi": 9
+  },
+  "sft_side": "White",
+  "status": "completed",
+  "winner": "Opponent",
+  "winner_colour": "Black"
+}

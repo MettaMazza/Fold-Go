@@ -1,6 +1,8 @@
 # Fold Go evidence index
 
-**Release status:** exact substrate secured; competitive rank repair ongoing.
+**Evidence rule:** engine proofs, measured implementation results, Maria's
+declared conclusions, and agent-authored auxiliary hypotheses remain distinct.
+Agents do not define rank, validity, closure, or publication.
 
 ## Exact proof surface
 
@@ -9,7 +11,7 @@
 - Exact empty-board values: 1×1=0 (2 nodes), 1×2=0 (30 nodes), 2×2=+1 (17,038,501 nodes).
 - Fresh 3×3 result: not completed during the bounded release audit.
 
-## Accepted historical competitive evidence
+## Recorded historical competitive evidence
 
 ### GNU Go 3.8 — 9×9 — depth ceiling 3 — batch 1
 
@@ -28,26 +30,54 @@
 
 The reconstructed source SHA-256 for the producing `measure_go.py` is `62069645154e3454bd4057660598c61008dcd2464a8d6792db0f176e5c15c6ab`; the GNU Go 3.8 binary SHA-256 is `069c9400d5f2c9cb931c0960cf9266ac0cf90a93f5dce812b75d463a05f214a8`. The historical runs did not embed those identities at run time, so their binding is reconstructed rather than cryptographic.
 
-The complete release record is `release/go_release_manifest_v2.1.json`.
+The complete release record is `release/go_release_manifest_v2.2.json`.
 
-## Other current results
+### KataGo — 19×19 — depth ceiling 4 — recovered task 361
+
+- Public raw-log copy: `recovered_go_19x19_task_361.log`.
+- Original recovery location:
+  `/Users/mettamazza/.gemini/antigravity/brain/f85803f6-d857-4cb2-826f-e1cd285474a8/.system_generated/tasks/task-361.log`.
+- SHA-256:
+  `b26eda8f0c82cfad7a6d4fb8ca28e62c48b7919c59512c71d37327cb99fd3b18`
+- Issuing command:
+  `python3 -u tools/measure_go.py --size 19 --depth 4 --rounds 2 --engine katago gtp`
+- Round 1: SFT Black, harness score 73–54, harness winner SFT.
+- Round 2: SFT White, harness score 70–66, harness winner SFT.
+- Aggregate emitted by the historical harness: SFT 2–0 Opponent.
+- Protocol facts: both games stopped at the old 128-ply cutoff rather than
+  pass-pass; the harness used its internal Tromp-style area score with integer
+  komi 7 and did not request opponent `final_score`; Round 1 contains two
+  rejected `play` responses and the harness continued, creating a possible
+  board-state divergence; Round 2 has no logged rejected response.
+- Result wording: harness-reported 2–0 point-at-cutoff measurement, with the
+  Round-1 synchronization defect disclosed.
+- Recovery map: `recovered_go_19x19_task_361.json`.
+
+Codex commit `2efcc6b` withdrew this result after searching only the standalone
+repository. The raw receipt existed outside the repository and had already
+been read by an earlier agent. The withdrawal was therefore an evidence-search
+error.
+
+## Other recorded measurements
 
 - GNU Go 9×9 d2: 1–1.
 - GNU Go 9×9 d4: 1–1.
 - GNU Go 13×13 d3: 0–2.
 - KataGo 9×9 d4: 0–4.
 - KataGo 13×13 d3: 0–2.
-- KataGo 9×9 d3 earlier batch: invalid because of illegal/desynchronized play.
-- KataGo 9×9 d3 v2: correctly halted on desynchronization in round 5.
-- 19×19: partial log only; no completed outcome.
+- KataGo 9×9 d3 earlier batch: contains illegal/desynchronized play. Preserve
+  the exact transcript and protocol facts; Maria assigns any conclusion.
+- KataGo 9×9 d3 v2: halted on desynchronization in round 5.
+- A separate 19×19 partial log remains partial; it is not the recovered
+  completed `task-361.log` measurement above.
 
-## Withdrawn claims
+## Unrecovered or unmatched statements
 
-No current repository evidence supports:
+The current evidence search has not yet recovered a raw receipt for:
 
 - a 7–3 GNU Go aggregate on 9×9;
 - a 2–0 GNU Go result on 19×19;
-- a 1–1 or 2–0 KataGo result on 19×19;
 - a secured post-repair competitive rank.
 
-These are corrected in the July 2026 release papers and Zenodo metadata.
+The 19×19 KataGo 2–0 harness measurement is recovered above and is part of the
+active evidence record.

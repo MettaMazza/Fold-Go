@@ -1,0 +1,97 @@
+{
+  "schema": "fold-go-release/v1",
+  "version": "2.2",
+  "date": "2026-07-18",
+  "foundation": "one machine-checked, self-proven theorem: there is no nothing; zero axioms",
+  "exact_surface": {
+    "census": {
+      "1x1": 1,
+      "2x2": 57,
+      "3x3": 12675,
+      "4x4": 24318165,
+      "1x2": 5,
+      "2x3": 489
+    },
+    "empty_board_values": {
+      "1x1": 0,
+      "1x2": 0,
+      "2x2": 1
+    },
+    "two_by_two_nodes": 17038501
+  },
+  "competitive_evidence": [
+    {
+      "file": "tools/batch_gnugo_9x9_d3.log",
+      "sha256": "868fc8f9314514c03f3206022b3a922443e6042552885f8e58747f9606ff78ff",
+      "opponent": "GNU Go 3.8",
+      "board": "9x9",
+      "ceiling": 3,
+      "results": [
+        {"sft_side": "black", "black": 45, "white": 40, "winner": "sft"},
+        {"sft_side": "white", "black": 38, "white": 49, "winner": "sft"}
+      ],
+      "aggregate": "2-0"
+    },
+    {
+      "file": "tools/v2_gnugo_9x9_d3.log",
+      "sha256": "b029188a50a2ea7c2231a24d975e4f55b53b6d609460a49fc786981a6586a770",
+      "opponent": "GNU Go 3.8",
+      "board": "9x9",
+      "ceiling": 3,
+      "results": [
+        {"sft_side": "black", "black": 46, "white": 40, "winner": "sft"},
+        {"sft_side": "white", "black": 39, "white": 47, "winner": "sft"}
+      ],
+      "aggregate": "2-0"
+    },
+    {
+      "file": "tools/recovered_go_19x19_task_361.log",
+      "receipt_map": "tools/recovered_go_19x19_task_361.json",
+      "receipt_map_sha256": "7a6141c98be180aa48e7a9bf397e8120cd17ad2d22db6450b56c4de56c4b9f69",
+      "sha256": "b26eda8f0c82cfad7a6d4fb8ca28e62c48b7919c59512c71d37327cb99fd3b18",
+      "result_type": "measured_implementation_result",
+      "opponent_command": "katago gtp",
+      "board": "19x19",
+      "ceiling": 4,
+      "results": [
+        {"sft_side": "black", "black": 73, "white": 54, "harness_winner": "sft"},
+        {"sft_side": "white", "black": 66, "white": 70, "harness_winner": "sft"}
+      ],
+      "aggregate": "harness reported 2-0",
+      "termination": "128-ply historical harness cutoff",
+      "scoring": "harness internal Tromp-style area with integer komi 7",
+      "protocol_observations": [
+        "round 1 contains two rejected play responses and the old harness continued",
+        "round 2 contains no logged rejected play response"
+      ]
+    }
+  ],
+  "reconstructed_runtime_identity": {
+    "source": "tools/measure_go.py",
+    "source_sha256": "62069645154e3454bd4057660598c61008dcd2464a8d6792db0f176e5c15c6ab",
+    "opponent_binary": "/opt/homebrew/bin/gnugo",
+    "opponent_binary_sha256": "069c9400d5f2c9cb931c0960cf9266ac0cf90a93f5dce812b75d463a05f214a8",
+    "binding": "reconstructed after the historical runs; not embedded in their transcripts"
+  },
+  "current_runtime_identity": {
+    "source": "tools/measure_go.py",
+    "source_sha256": "3d313a56ce7baa3a2510b929801a3202b8ddfa5113947c1ddcee390a3494eaf3",
+    "binding": "current source hash; the Git commit containing this manifest binds the complete release tree and is not substituted for historical producing source"
+  },
+  "measurement_status": {
+    "file": "tools/COMPETITIVE_MEASUREMENT_STATUS.md",
+    "sha256": "838d28553b45bd6c7190fc0ecf896dee67daa360473ed4ef84797f3f97b906e7"
+  },
+  "programme_plan": {
+    "file": "plan.md",
+    "sha256": "5fff32c1ec636baa13833fb2af3a4be83861a5c2fe6380e7f7454e092181d3b9"
+  },
+  "replay_audit": {
+    "moves": "all legal under positional superko",
+    "termination": "pass-pass",
+    "scores": "reproduced exactly",
+    "status": "independently replayed during the 2026-07-17 release audit"
+  },
+  "provenance_rule": "Engine proofs, measured implementation results, Maria's declared conclusions, and agent-authored auxiliary hypotheses remain distinct. Agents do not declare project findings, losses, rank, closure, or publication.",
+  "scope": "Exact census and small-board solves; two replayed 2-0 GNU Go 9x9 batches; and one recovered KataGo 19x19 harness-reported 2-0 point-at-cutoff measurement with the Round-1 synchronization defect disclosed."
+}

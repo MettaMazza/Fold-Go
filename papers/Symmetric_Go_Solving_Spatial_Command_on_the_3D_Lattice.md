@@ -6,7 +6,7 @@
 
 This paper presents the exact substrate of Fold Go, a computational proof of the Smithian Fold Theory. The system is founded on the machine-checked, self-proven theorem **there is no nothing**, which forces the One and its fold rather than assuming them. Go positions are represented as finite three-state coordinate fields; groups and liberties are counted connected components; every reported finite census is generated forward by the engine and independently checked.
 
-The release reproduces the exact legal-position inventory for boards 1×1 through 4×4 and two rectangles, with zero disagreements from an independent referee. Its exact game solver freshly secures empty-board values through 2×2. A previously stated 3×3 value and claimed 9×9/19×19 tournament aggregates are not promoted without a completed current receipt. Competitive evidence is reported separately in the companion Fold Go development-result paper.
+The release reproduces the exact legal-position inventory for boards 1×1 through 4×4 and two rectangles, with zero disagreements from an independent referee. Its exact game solver freshly secures empty-board values through 2×2. Competitive measurements are reported separately in the companion paper, including two replayed 9×9 GNU Go sweeps and the recovered 19×19 KataGo task receipt with its exact cutoff, scoring, and synchronization facts.
 
 ## 1. Counted legality
 
@@ -35,9 +35,9 @@ The release audit did not finish a fresh 3×3 proof and therefore makes no curre
 
 ## 3. Symmetry and proof obligations
 
-Dihedral reduction is valid only when it preserves the complete state on which legality and value depend. For simple finite census states, board symmetry is sufficient. For positional-superko competitive states, the history must be transformed with the board. Current competitive code canonicalizes the current board only, so its transposition cache is not an exact solver for the augmented rule state.
+Dihedral reduction is valid only when it preserves the complete state on which legality and value depend. For simple finite census states, board symmetry is sufficient. For positional-superko competitive states, the history must be transformed with the board. The current competitive code binds board, mover, previous-pass state, and the complete positional-superko history under a history-wide symmetry transform. Its transposition entries carry exact/lower/upper bound types.
 
-This distinction is constructive: it identifies the next theorem-to-code bridge precisely. The optimized search will be admitted only when an all-actions, no-cache reference agrees exhaustively on small reachable augmented states.
+The current 11-test implementation suite includes optimized-versus-no-cache comparisons on reachable augmented small-board states. This remains a bounded competitive search rather than the exhaustive `.ep` small-board solver.
 
 ## 4. Reproducibility
 
@@ -54,4 +54,7 @@ Long-running endpoints must terminate with a result or an explicit honest abort.
 
 ## 5. Conclusion
 
-The exact Fold Go result is already substantive: finite Go legality and small-board game values are executable counted objects with independent checks. Larger-board competitive strength remains a forward-forcing programme, not the criterion by which the exact surface is judged.
+Finite Go legality and small-board game values are executable counted objects
+with independent checks. Larger-board benchmark victory is the active
+forward-forcing campaign. Both are reported on their own evidence, and agents
+do not declare development batches to be Maria's findings, losses, or endpoint.

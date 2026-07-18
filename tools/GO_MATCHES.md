@@ -1,6 +1,6 @@
 # SFT Go Engine Match Ledger
 
-> This file is the latest overwritten batch ledger, not the cumulative competitive record. The immutable release evidence and complete claim scope are indexed in `RESULTS_INDEX.md` and `../release/go_release_manifest_v2.1.json`.
+> This file is the latest overwritten batch ledger, not the cumulative competitive record. The immutable release evidence and complete claim scope are indexed in `RESULTS_INDEX.md` and `../release/go_release_manifest_v2.2.json`.
 
 **Date:** July 17, 2026
 **Engine:** SFT Type Zero Go v2.0 (zero parameters, iterative deepening ceiling 4, 2^19 node budget)  

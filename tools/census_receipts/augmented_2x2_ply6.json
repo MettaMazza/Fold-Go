@@ -1,0 +1,1999 @@
+{
+  "augmented_state_count": 134,
+  "board_size": 2,
+  "comparison_count": 134,
+  "comparison_depth": 1,
+  "disagreement_count": 0,
+  "max_plies": 6,
+  "pass_pass_terminals": 24,
+  "per_ply": [
+    {
+      "new_augmented_states": 1,
+      "ply": 0
+    },
+    {
+      "new_augmented_states": 2,
+      "ply": 1
+    },
+    {
+      "new_augmented_states": 4,
+      "ply": 2
+    },
+    {
+      "new_augmented_states": 10,
+      "ply": 3
+    },
+    {
+      "new_augmented_states": 19,
+      "ply": 4
+    },
+    {
+      "new_augmented_states": 34,
+      "ply": 5
+    },
+    {
+      "new_augmented_states": 64,
+      "ply": 6
+    }
+  ],
+  "schema": "fold-go-augmented-state-census/v1",
+  "source_commit": "03ff1eea2cffec7cd3fd0d608d3f35e9f9a799a0",
+  "source_sha256": {
+    "tools/augmented_state_census.py": "b1738bc6bd1def3c0c9570aad84a8129dfc3c58380d6ac4488c40b1066891cd4",
+    "tools/measure_go.py": "5e96442a53c0989a87e33c92148d61e8806b5b6b3db2d18771aadd76dd916a96"
+  },
+  "states": [
+    {
+      "board": "0000",
+      "first_reached_ply": 0,
+      "history": [
+        "0000"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0000",
+      "first_reached_ply": 1,
+      "history": [
+        "0000"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0001",
+      "first_reached_ply": 2,
+      "history": [
+        "0000",
+        "0001"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0001",
+      "first_reached_ply": 1,
+      "history": [
+        "0000",
+        "0001"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0002",
+      "first_reached_ply": 2,
+      "history": [
+        "0000",
+        "0002"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0002",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "0010",
+        "0012",
+        "0110",
+        "1110"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0002",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "0010",
+        "0012",
+        "1012",
+        "1110"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0002",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "0010",
+        "0110",
+        "1110"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0002",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "0010",
+        "0110",
+        "1110",
+        "2010"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0002",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "0010",
+        "1010",
+        "1012",
+        "1110"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0002",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "0010",
+        "1010",
+        "1110"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0002",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "1000",
+        "1002",
+        "1012",
+        "1110"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 1,
+      "value_without_tt": 1
+    },
+    {
+      "board": "0002",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "1000",
+        "1010",
+        "1012",
+        "1110"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0002",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "1000",
+        "1010",
+        "1110"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0002",
+      "first_reached_ply": 3,
+      "history": [
+        "0000",
+        "0002"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0011",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0001",
+        "0011"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0011",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0001",
+        "0011",
+        "0201",
+        "2201"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0011",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0001",
+        "0011",
+        "2001",
+        "2201"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0011",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0011",
+        "0200",
+        "0201",
+        "2201"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0011",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0011",
+        "0200",
+        "0210",
+        "2210"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0011",
+      "first_reached_ply": 3,
+      "history": [
+        "0000",
+        "0001",
+        "0011"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0011",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0001",
+        "0011",
+        "0201",
+        "2201"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0011",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0001",
+        "0011",
+        "2001",
+        "2201"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0011",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0011",
+        "0200",
+        "0201",
+        "2201"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0011",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0011",
+        "0200",
+        "0210",
+        "2210"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0012",
+      "first_reached_ply": 2,
+      "history": [
+        "0000",
+        "0010",
+        "0012"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0012",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0002",
+        "0012"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0012",
+      "first_reached_ply": 3,
+      "history": [
+        "0000",
+        "0002",
+        "0012"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0012",
+      "first_reached_ply": 3,
+      "history": [
+        "0000",
+        "0010",
+        "0012"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0022",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0002",
+        "0022"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0022",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "0022",
+        "0102",
+        "1102"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0022",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "0022",
+        "1002",
+        "1102"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0022",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0022",
+        "0100",
+        "0102",
+        "1102"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0022",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0022",
+        "0100",
+        "0120",
+        "1120"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0022",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0022",
+        "0100",
+        "1100",
+        "1102"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0022",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0022",
+        "0100",
+        "1100",
+        "1120"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0022",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0002",
+        "0022"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0022",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0022",
+        "0100",
+        "0102",
+        "1102"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0022",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0022",
+        "0100",
+        "0120",
+        "1120"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0110",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "0012",
+        "0110"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0110",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0010",
+        "0012",
+        "0110"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0110",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0010",
+        "0110"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0110",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0002",
+        "0012",
+        "0110"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 1,
+      "value_without_tt": 1
+    },
+    {
+      "board": "0110",
+      "first_reached_ply": 3,
+      "history": [
+        "0000",
+        "0010",
+        "0012",
+        "0110"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 1,
+      "value_without_tt": 1
+    },
+    {
+      "board": "0110",
+      "first_reached_ply": 3,
+      "history": [
+        "0000",
+        "0010",
+        "0110"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 1,
+      "value_without_tt": 1
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0001",
+        "0011",
+        "0111"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0001",
+        "0011",
+        "0111",
+        "2011"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0001",
+        "0111",
+        "2001",
+        "2011"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0010",
+        "0011",
+        "0111"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0010",
+        "0011",
+        "0111",
+        "2011"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0010",
+        "0012",
+        "0110",
+        "0111"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0010",
+        "0110",
+        "0111"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0010",
+        "0110",
+        "0111",
+        "2010"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0010",
+        "0111",
+        "2010",
+        "2011"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0001",
+        "0011",
+        "0111"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0001",
+        "0011",
+        "0111",
+        "2011"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0001",
+        "0111",
+        "2001",
+        "2011"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0010",
+        "0011",
+        "0111"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0010",
+        "0011",
+        "0111",
+        "2011"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0010",
+        "0012",
+        "0110",
+        "0111"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0010",
+        "0110",
+        "0111"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0010",
+        "0110",
+        "0111",
+        "2010"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0111",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0010",
+        "0111",
+        "2010",
+        "2011"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0120",
+      "first_reached_ply": 2,
+      "history": [
+        "0000",
+        "0100",
+        "0120"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 4294967298,
+      "value_without_tt": 4294967298
+    },
+    {
+      "board": "0120",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0020",
+        "0120"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 4294967298,
+      "value_without_tt": 4294967298
+    },
+    {
+      "board": "0120",
+      "first_reached_ply": 3,
+      "history": [
+        "0000",
+        "0020",
+        "0120"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 4294967298,
+      "value_without_tt": 4294967298
+    },
+    {
+      "board": "0120",
+      "first_reached_ply": 3,
+      "history": [
+        "0000",
+        "0100",
+        "0120"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 4294967298,
+      "value_without_tt": 4294967298
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0001",
+        "0021",
+        "0101",
+        "0121",
+        "2021"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0001",
+        "0101",
+        "0121"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0001",
+        "0101",
+        "0121",
+        "2001",
+        "2021"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0020",
+        "0021",
+        "0101",
+        "0121",
+        "2021"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0020",
+        "0101",
+        "0120",
+        "0121",
+        "2120"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0100",
+        "0101",
+        "0120",
+        "0121",
+        "2120"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0100",
+        "0101",
+        "0121"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0100",
+        "0101",
+        "0121",
+        "2100",
+        "2120"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0101",
+        "0121",
+        "2000",
+        "2001",
+        "2021"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0101",
+        "0121",
+        "2000",
+        "2100",
+        "2120"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0001",
+        "0021",
+        "0121"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 8589934595,
+      "value_without_tt": 8589934595
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0020",
+        "0021",
+        "0121"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0020",
+        "0120",
+        "0121"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0100",
+        "0120",
+        "0121"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 8589934595,
+      "value_without_tt": 8589934595
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 3,
+      "history": [
+        "0000",
+        "0001",
+        "0021",
+        "0121"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0020",
+        "0021",
+        "0121"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0020",
+        "0120",
+        "0121"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 3,
+      "history": [
+        "0000",
+        "0100",
+        "0120",
+        "0121"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0001",
+        "0101",
+        "0121"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0121",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0100",
+        "0101",
+        "0121"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0002",
+        "0102",
+        "0122"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0020",
+        "0120",
+        "0122"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0100",
+        "0102",
+        "0122"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0100",
+        "0120",
+        "0122"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "0022",
+        "0122"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0020",
+        "0022",
+        "0122"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0022",
+        "0100",
+        "0102",
+        "0122",
+        "1102"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0022",
+        "0100",
+        "0120",
+        "0122",
+        "1120"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0022",
+        "0122",
+        "1000",
+        "1002",
+        "1102"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0022",
+        "0122",
+        "1000",
+        "1020",
+        "1120"
+      ],
+      "last_passed": 1,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0002",
+        "0022",
+        "0122"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0020",
+        "0022",
+        "0122"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0022",
+        "0100",
+        "0102",
+        "0122",
+        "1102"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0022",
+        "0100",
+        "0120",
+        "0122",
+        "1120"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0022",
+        "0122",
+        "1000",
+        "1002",
+        "1102"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 8589934597,
+      "value_without_tt": 8589934597
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0022",
+        "0122",
+        "1000",
+        "1020",
+        "1120"
+      ],
+      "last_passed": 0,
+      "to_move": 2,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0002",
+        "0102",
+        "0122"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 8589934595,
+      "value_without_tt": 8589934595
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0020",
+        "0120",
+        "0122"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 8589934595,
+      "value_without_tt": 8589934595
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0100",
+        "0102",
+        "0122"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0122",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0100",
+        "0120",
+        "0122"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0220",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0001",
+        "0021",
+        "0220"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 1,
+      "value_without_tt": 1
+    },
+    {
+      "board": "0220",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0020",
+        "0021",
+        "0220"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 1,
+      "value_without_tt": 1
+    },
+    {
+      "board": "0220",
+      "first_reached_ply": 4,
+      "history": [
+        "0000",
+        "0020",
+        "0220"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 1,
+      "value_without_tt": 1
+    },
+    {
+      "board": "0220",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0001",
+        "0021",
+        "0220"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0220",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0020",
+        "0021",
+        "0220"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0220",
+      "first_reached_ply": 5,
+      "history": [
+        "0000",
+        "0020",
+        "0220"
+      ],
+      "last_passed": 1,
+      "to_move": 2,
+      "value_with_tt": 17179869188,
+      "value_without_tt": 17179869188
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0001",
+        "0021",
+        "0220",
+        "0222"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "0022",
+        "0222"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "0022",
+        "0222",
+        "1022"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0002",
+        "0222",
+        "1002",
+        "1022"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 4294967297,
+      "value_without_tt": 4294967297
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0010",
+        "0012",
+        "0202",
+        "0222",
+        "1012"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0010",
+        "0012",
+        "0202",
+        "0222",
+        "1012",
+        "1202"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0010",
+        "0202",
+        "0210",
+        "0222",
+        "1202",
+        "1210"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0010",
+        "0202",
+        "0210",
+        "0222",
+        "1210"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0020",
+        "0021",
+        "0220",
+        "0222"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0020",
+        "0022",
+        "0222"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0020",
+        "0022",
+        "0222",
+        "1022"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901893,
+      "value_without_tt": 12884901893
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0020",
+        "0220",
+        "0222"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0020",
+        "0220",
+        "0222",
+        "1020"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0020",
+        "0222",
+        "1020",
+        "1022"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 12884901894,
+      "value_without_tt": 12884901894
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0022",
+        "0222",
+        "1000",
+        "1002",
+        "1022",
+        "1102"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 1,
+      "value_without_tt": 1
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0022",
+        "0222",
+        "1000",
+        "1002",
+        "1102"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 1,
+      "value_without_tt": 1
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0022",
+        "0222",
+        "1000",
+        "1020",
+        "1022",
+        "1120"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 1,
+      "value_without_tt": 1
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0022",
+        "0222",
+        "1000",
+        "1020",
+        "1120"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 1,
+      "value_without_tt": 1
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0220",
+        "0222",
+        "1000",
+        "1020"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 1,
+      "value_without_tt": 1
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0222",
+        "1000",
+        "1002",
+        "1022"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 1,
+      "value_without_tt": 1
+    },
+    {
+      "board": "0222",
+      "first_reached_ply": 6,
+      "history": [
+        "0000",
+        "0222",
+        "1000",
+        "1020",
+        "1022"
+      ],
+      "last_passed": 0,
+      "to_move": 1,
+      "value_with_tt": 1,
+      "value_without_tt": 1
+    }
+  ],
+  "status": "completed"
+}

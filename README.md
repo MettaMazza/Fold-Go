@@ -17,9 +17,16 @@ A fresh 3×3 value was not completed in the bounded release audit and is not cla
 
 ## Competitive development evidence
 
-Two separate 9×9 depth-ceiling-3 batches against GNU Go 3.8 ended **SFT 2–0**. Independent replay verified every move, both pass-pass terminals, and all four internal Tromp-area-plus-7 scores. These are genuine historical results.
+Two separate 9×9 depth-ceiling-3 batches against GNU Go 3.8 ended **SFT 2–0**. Independent replay verified every move, both pass-pass terminals, and all four internal Tromp-area-plus-7 scores.
 
-They are not yet the secured post-repair rank. The competitive search still needs an augmented-state proof gate for complete positional-superko history, previous-pass state, transposition bound types, universal pass search, and a cryptographically bound referee contract. No current receipt supports a 19×19 or KataGo victory or tie.
+The original 19×19 depth-ceiling-4 KataGo task receipt has also been recovered.
+Its historical harness reported **SFT 2–0**, 73–54 as Black and 70–66 as
+White. The exact protocol record is preserved with the result: both games
+stopped at the historical 128-ply cutoff and used the harness's internal area
+score; Round 1 contains two rejected `play` responses that the old harness did
+not halt on, while Round 2 contains no logged rejection. This is reported as a
+harness point-at-cutoff measurement with the Round-1 synchronization defect,
+not erased and not conflated with the exact small-board proofs.
 
 See [tools/RESULTS_INDEX.md](tools/RESULTS_INDEX.md) for the complete evidence map.
 
@@ -49,7 +56,7 @@ The 4×4 census is exhaustive and takes several minutes. Long-running solves mus
 | `tests/fold_go_*.ep` | exact certification programs |
 | `tools/go_*_referee.py` | independent Python checks |
 | `tools/measure_go.py` | bounded competitive development harness |
-| `tools/RESULTS_INDEX.md` | evidence, hashes, accepted/refused claims |
+| `tools/RESULTS_INDEX.md` | evidence, hashes, provenance, and protocol facts |
 | `tools/*.log`, `gtp_logs/` | preserved raw transcripts |
 
 Read [AGENT.md](AGENT.md) before changing the system. Every admitted mechanism must be directly forced, forward-forced, or constitutionally re-derived, and every violation must halt.

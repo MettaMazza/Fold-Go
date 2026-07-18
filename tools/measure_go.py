@@ -13,18 +13,35 @@ import sys
 import subprocess
 import os
 import collections
+import argparse
+import hashlib
+import json
+import platform
+import shutil
+import tempfile
+from datetime import datetime, timezone
+from pathlib import Path
+
+PASS = None
+RESIGN = "resign"
 
 # ==================== ZERO-PARAMETER SFT GO ENGINE ====================
 
 class SFTGoBoard:
-    def __init__(self, size=9):
+    def __init__(self, size=9, komi=0):
         self.size = size
+        self.komi = int(komi)
         self.board = [0] * (size * size)  # 0: empty, 1: black, 2: white
         self.ko_square = None
-        self.history = set()  # position set: O(1) superko lookup instead of O(moves) scan
+        # Complete positional-superko state.  The initial position is part of the
+        # history; passes do not invent a new position.
+        self.history = {self.position_key()}
+
+    def position_key(self):
+        return "".join(map(str, self.board))
 
     def copy(self):
-        nb = SFTGoBoard(self.size)
+        nb = SFTGoBoard(self.size, self.komi)
         nb.board = list(self.board)
         nb.ko_square = self.ko_square
         nb.history = set(self.history)
@@ -84,7 +101,6 @@ class SFTGoBoard:
 
     def play_move(self, idx, color):
         if idx is None:  # Pass
-            self.history.add("".join(map(str, self.board)))
             self.ko_square = None
             return True
         if not self.is_legal(idx, color):
@@ -103,7 +119,7 @@ class SFTGoBoard:
         # is_legal already forbids any repetition. No ad-hoc ko square — it was
         # stricter than the real rules and could reject legal opponent moves.
         self.ko_square = None
-        self.history.add("".join(map(str, self.board)))
+        self.history.add(self.position_key())
         return True
 
     def get_legal_moves(self, color):
@@ -140,34 +156,40 @@ def get_transformed_index(p, size, t):
         r2, c2 = size - 1 - col, size - 1 - row
     return r2 * size + c2
 
-def get_canonical_state(board_array, size, ko_square):
-    best_arr = tuple(board_array)
-    best_ko = ko_square
-    for t in range(1, 8):
-        arr = [0] * (size * size)
-        for i in range(size * size):
-            arr[get_transformed_index(i, size, t)] = board_array[i]
-        arr_t = tuple(arr)
-        if arr_t < best_arr:
-            best_arr = arr_t
-            if ko_square is not None:
-                best_ko = get_transformed_index(ko_square, size, t)
-            else:
-                best_ko = None
-    return best_arr, best_ko
+def transform_position(position, size, transform):
+    transformed = ["0"] * (size * size)
+    for index, value in enumerate(position):
+        transformed[get_transformed_index(index, size, transform)] = str(value)
+    return "".join(transformed)
 
-def fold_hash(board, to_move_color):
-    """Deterministic position hash using fold-natural prime 131 and canonical board."""
+
+def canonical_augmented_state(board, to_move_color, last_passed):
+    """Canonicalize board and the complete PSK history under one transform."""
+    candidates = []
+    current = board.position_key()
+    for transform in range(8):
+        transformed_board = transform_position(current, board.size, transform)
+        transformed_history = tuple(sorted(
+            transform_position(position, board.size, transform)
+            for position in board.history
+        ))
+        candidates.append((transformed_board, to_move_color, int(bool(last_passed)),
+                           transformed_history))
+    return min(candidates)
+
+
+def fold_hash(state_key):
+    """Deterministic hash of an exact augmented-state key."""
     k = 0
-    canonical_arr, canonical_ko = get_canonical_state(board.board, board.size, board.ko_square)
-    for i in range(board.size * board.size):
-        k = k * 131 + canonical_arr[i]
-        k = k % HASH_PRIME
-    k = k * 131 + to_move_color
-    k = k % HASH_PRIME
-    if canonical_ko is not None:
-        k = k * 131 + canonical_ko + 1
-        k = k % HASH_PRIME
+    board_key, to_move_color, last_passed, history = state_key
+    for value in board_key:
+        k = (k * 131 + int(value)) % HASH_PRIME
+    for value in (to_move_color, last_passed, len(history)):
+        k = (k * 131 + value) % HASH_PRIME
+    for position in history:
+        for value in position:
+            k = (k * 131 + int(value)) % HASH_PRIME
+        k = (k * 131 + 3) % HASH_PRIME
     return k
 
 
@@ -280,17 +302,15 @@ VALUE_DRAW = pack_value(1, 2)       # 1/2 — the lock
 # Selects moves adjacent to existing groups (the active fronts).
 # This is geometric pruning — not a free parameter.
 
-def get_board_symmetries(board_array, size):
-    """Returns a list of transformation indices [0..7] under which the board is invariant."""
+def get_augmented_symmetries(board):
+    """Transforms admitted by both the board and every positional-superko state."""
+    board_key = board.position_key()
     symmetries = [0]
     for t in range(1, 8):
-        invariant = True
-        for i in range(size * size):
-            ti = get_transformed_index(i, size, t)
-            if board_array[i] != board_array[ti]:
-                invariant = False
-                break
-        if invariant:
+        if transform_position(board_key, board.size, t) != board_key:
+            continue
+        if all(transform_position(position, board.size, t) == position
+               for position in board.history):
             symmetries.append(t)
     return symmetries
 
@@ -309,7 +329,7 @@ def get_dynamic_sparse_moves(board, to_move_color, legal_moves, tactical_only=Fa
     size = board.size
     
     # Calculate active symmetries for the current board state
-    active_symmetries = get_board_symmetries(board.board, size)
+    active_symmetries = get_augmented_symmetries(board)
     
     empty = all(x == 0 for x in board.board)
     if empty:
@@ -365,7 +385,7 @@ def get_dynamic_sparse_moves(board, to_move_color, legal_moves, tactical_only=Fa
             return []
         candidates = set(legal_moves)
         
-    # Apply dynamic orbit reduction to all candidates based on the current board's symmetries
+    # Apply orbit reduction only under symmetries of the complete augmented state.
     reps = set()
     for m in candidates:
         reps.add(get_orbit_representative(m, size, active_symmetries))
@@ -381,23 +401,48 @@ tt_keys = [0] * TT_SIZE
 tt_values = [0] * TT_SIZE
 tt_depths = [0] * TT_SIZE
 tt_stamps = [0] * TT_SIZE
+tt_flags = [0] * TT_SIZE
 tt_gen = [1]
 
-
-def tt_probe(key, depth):
-    """Probe the transposition table. Returns packed value or None."""
-    slot = key % TT_SIZE
-    if tt_stamps[slot] == tt_gen[0] and tt_keys[slot] == key and tt_depths[slot] >= depth:
-        return tt_values[slot]
-    return None
+TT_EXACT = 1
+TT_LOWER = 2
+TT_UPPER = 3
 
 
-def tt_store(key, depth, value):
-    """Store a value in the transposition table."""
-    slot = key % TT_SIZE
-    tt_keys[slot] = key
+def value_at_least(left, right):
+    return left == right or value_greater(left, right)
+
+
+def value_at_most(left, right):
+    return left == right or value_greater(right, left)
+
+
+def tt_probe(state_key, depth, alpha, beta):
+    """Probe an exact augmented state and respect its bound type."""
+    slot = fold_hash(state_key) % TT_SIZE
+    if not (tt_stamps[slot] == tt_gen[0] and tt_keys[slot] == state_key
+            and tt_depths[slot] >= depth):
+        return None, alpha, beta
+    value = tt_values[slot]
+    flag = tt_flags[slot]
+    if flag == TT_EXACT:
+        return value, alpha, beta
+    if flag == TT_LOWER and value_greater(value, alpha):
+        alpha = value
+    elif flag == TT_UPPER and value_greater(beta, value):
+        beta = value
+    if value_at_least(alpha, beta):
+        return value, alpha, beta
+    return None, alpha, beta
+
+
+def tt_store(state_key, depth, value, flag):
+    """Store a typed bound with exact state verification."""
+    slot = fold_hash(state_key) % TT_SIZE
+    tt_keys[slot] = state_key
     tt_values[slot] = value
     tt_depths[slot] = depth
+    tt_flags[slot] = flag
     tt_stamps[slot] = tt_gen[0]
 
 
@@ -423,7 +468,17 @@ def invert_value(packed):
     return pack_value(den - num, den)
 
 
-def alphabeta_sft(board, depth, alpha, beta, to_move_color, last_passed=False):
+def terminal_area_value(board, to_move_color):
+    black, white = get_area_score(board)
+    white += board.komi
+    total = black + white
+    if total <= 0:
+        return VALUE_DRAW
+    return pack_value(black if to_move_color == 1 else white, total)
+
+
+def alphabeta_sft(board, depth, alpha, beta, to_move_color, last_passed=False,
+                  use_tt=True):
     """SFT-compliant alpha-beta. Returns packed value (num * PACK_BASE (2^32) + den)."""
     # Hard node bound
     nodes_left[0] -= 1
@@ -431,11 +486,12 @@ def alphabeta_sft(board, depth, alpha, beta, to_move_color, last_passed=False):
         pass_aborted[0] = 1
         return VALUE_DRAW  # placeholder — discarded by driver
 
-    # TT probe
-    h = fold_hash(board, to_move_color)
-    tt_val = tt_probe(h, depth)
-    if tt_val is not None:
-        return tt_val
+    original_alpha, original_beta = alpha, beta
+    state_key = canonical_augmented_state(board, to_move_color, last_passed)
+    if use_tt:
+        tt_val, alpha, beta = tt_probe(state_key, depth, alpha, beta)
+        if tt_val is not None:
+            return tt_val
 
     if depth <= 0:
         # SFT Leaf evaluation / Stand pat for Quiescence Search
@@ -453,10 +509,11 @@ def alphabeta_sft(board, depth, alpha, beta, to_move_color, last_passed=False):
 
     legal_moves = board.get_legal_moves(to_move_color)
     tactical_only = (depth <= 0)
-    candidates = get_dynamic_sparse_moves(board, to_move_color, legal_moves, tactical_only=tactical_only)
-
-    if depth <= 0 and not candidates:
-        return stand_pat
+    if board.size <= 3:
+        candidates = legal_moves
+    else:
+        candidates = get_dynamic_sparse_moves(
+            board, to_move_color, legal_moves, tactical_only=tactical_only)
 
     # Move ordering: evaluate each candidate at depth 0 (counted command) + Heuristics
     move_scores = []
@@ -495,7 +552,7 @@ def alphabeta_sft(board, depth, alpha, beta, to_move_color, last_passed=False):
         nb.play_move(m, to_move_color)
         # Recurse for the opponent, then invert.
         child_val = alphabeta_sft(nb, depth - 1, invert_value(beta), invert_value(a),
-                                   3 - to_move_color, False)
+                                   3 - to_move_color, False, use_tt)
         if pass_aborted[0] == 1:
             break
         my_val = invert_value(child_val)
@@ -511,27 +568,30 @@ def alphabeta_sft(board, depth, alpha, beta, to_move_color, last_passed=False):
                 if killer_moves[depth][0] != m:
                     killer_moves[depth][1] = killer_moves[depth][0]
                     killer_moves[depth][0] = m
-            tt_store(h, depth, best)
+            if use_tt:
+                tt_store(state_key, depth, best, TT_LOWER)
             return best
 
-    # Pass move
-    if not move_scores and not last_passed:
+    # Pass is an action at every node, not a fallback for move exhaustion.
+    if pass_aborted[0] == 1:
+        return VALUE_DRAW
+    if last_passed:
+        my_val = terminal_area_value(board, to_move_color)
+    else:
         child_val = alphabeta_sft(board, depth - 1, invert_value(beta), invert_value(a),
-                                   3 - to_move_color, True)
-        if pass_aborted[0] == 0:
-            my_val = invert_value(child_val)
-            if value_greater(my_val, best):
-                best = my_val
-    elif not move_scores and last_passed:
-        # Double pass: game over. Score by area.
-        b_u, w_u = counted_command(board)
-        total = b_u + w_u
-        if to_move_color == 1:
-            best = pack_value(b_u, total)
-        else:
-            best = pack_value(w_u, total)
+                                   3 - to_move_color, True, use_tt)
+        my_val = invert_value(child_val)
+    if pass_aborted[0] == 0 and value_greater(my_val, best):
+        best = my_val
 
-    tt_store(h, depth, best)
+    if value_at_most(best, original_alpha):
+        flag = TT_UPPER
+    elif value_at_least(best, original_beta):
+        flag = TT_LOWER
+    else:
+        flag = TT_EXACT
+    if use_tt:
+        tt_store(state_key, depth, best, flag)
     return best
 
 
@@ -558,7 +618,7 @@ def _get_pool():
 
 
 def _eval_root_candidate(task):
-    board, color, m, depth = task
+    board, color, m, depth, root_last_passed = task
     # Fresh, task-local search state: no cross-task reuse (determinism).
     tt_gen[0] += 1
     nodes_left[0] = NODE_BUDGET
@@ -568,39 +628,51 @@ def _eval_root_candidate(task):
     for km in killer_moves:
         km[0] = -1
         km[1] = -1
+    # A pass after the opponent's pass ends the game at this root. Score the
+    # literal terminal board; do not enter another search node and silently
+    # reinterpret it as a first pass.
+    if m is PASS and root_last_passed:
+        return (m, terminal_area_value(board, color))
     nb = board.copy()
     nb.play_move(m, color)
     child_val = alphabeta_sft(nb, depth - 1, invert_value(VALUE_CEILING),
-                              invert_value(VALUE_FLOOR), 3 - color, False)
+                              invert_value(VALUE_FLOOR), 3 - color, m is PASS)
     if pass_aborted[0] == 1:
         return (m, None)  # honest abort: this pass is incomplete
     return (m, invert_value(child_val))
 
 
-def select_sft_move(board, color, ceiling=8):
-    """Select the best move using SFT iterative deepening with a parallel root."""
+def root_candidates(board, color):
+    """Every root includes pass; point candidates retain deterministic order."""
     legal_moves = board.get_legal_moves(color)
-    if not legal_moves:
-        return None
-    if len(legal_moves) == 1:
-        return legal_moves[0]
+    if board.size <= 3:
+        candidates = sorted(legal_moves)
+    else:
+        candidates = sorted(get_dynamic_sparse_moves(board, color, legal_moves))
+    return candidates + [PASS]
 
-    candidates = sorted(get_dynamic_sparse_moves(board, color, legal_moves))
+
+def select_sft_move(board, color, ceiling=8, root_last_passed=False):
+    """Select the best move using SFT iterative deepening with a parallel root."""
+    candidates = root_candidates(board, color)
     best_move = candidates[0]
 
     pool = _get_pool()
     for depth in range(1, ceiling + 1):
         results = pool.map(_eval_root_candidate,
-                           [(board, color, m, depth) for m in candidates])
+                           [(board, color, m, depth, bool(root_last_passed))
+                            for m in candidates])
         if any(v is None for _, v in results):
             break  # a subtree hit its node budget — keep the last completed pass
         depth_best_move = None
+        depth_best_set = False
         depth_best_val = VALUE_FLOOR
         for m, v in results:  # fixed order: lowest index wins exact ties
             if value_greater(v, depth_best_val):
                 depth_best_val = v
                 depth_best_move = m
-        if depth_best_move is not None:
+                depth_best_set = True
+        if depth_best_set:
             best_move = depth_best_move
 
     return best_move
@@ -619,8 +691,10 @@ def index_to_gtp(idx, size):
 
 def gtp_to_index(gtp_str, size):
     s = gtp_str.strip().upper()
-    if s == "PASS" or s == "RESIGN":
-        return None
+    if s == "PASS":
+        return PASS
+    if s == "RESIGN":
+        return RESIGN
     col_char = s[0]
     c = "ABCDEFGHJKLMNOPQRSTY".index(col_char)
     r = size - int(s[1:])
@@ -630,6 +704,7 @@ def gtp_to_index(gtp_str, size):
 def run_gtp_server():
     size = 9
     board = SFTGoBoard(size)
+    last_passed = False
     color_map = {"B": 1, "W": 2, "BLACK": 1, "WHITE": 2}
 
     while True:
@@ -658,33 +733,51 @@ def run_gtp_server():
             elif cmd == "known_command":
                 known = cmd in ["protocol_version", "name", "version", "known_command",
                                 "list_commands", "quit", "boardsize", "clear_board",
-                                "play", "genmove"]
+                                "komi", "play", "genmove"]
                 print(f"={cmd_id} {'true' if known else 'false'}\n")
             elif cmd == "list_commands":
                 print(f"={cmd_id} protocol_version\nname\nversion\nknown_command\n"
-                      f"list_commands\nquit\nboardsize\nclear_board\nplay\ngenmove\n")
+                      f"list_commands\nquit\nboardsize\nclear_board\nkomi\nplay\ngenmove\n")
             elif cmd == "quit":
                 print(f"={cmd_id}\n")
                 sys.exit(0)
             elif cmd == "boardsize":
                 size = int(args[0])
                 board = SFTGoBoard(size)
+                last_passed = False
                 print(f"={cmd_id}\n")
             elif cmd == "clear_board":
-                board = SFTGoBoard(size)
+                board = SFTGoBoard(size, board.komi)
+                last_passed = False
+                print(f"={cmd_id}\n")
+            elif cmd == "komi":
+                komi_text = args[0]
+                if not komi_text.lstrip("-").isdigit():
+                    print(f"?{cmd_id} integer komi required\n")
+                    sys.stdout.flush()
+                    continue
+                board.komi = int(komi_text)
                 print(f"={cmd_id}\n")
             elif cmd == "play":
                 color = color_map.get(args[0].upper(), 1)
                 move = gtp_to_index(args[1], size)
+                if move == RESIGN:
+                    print(f"?{cmd_id} resign is not a play coordinate\n")
+                    sys.stdout.flush()
+                    continue
                 ok = board.play_move(move, color)
                 if ok:
+                    last_passed = move is PASS
                     print(f"={cmd_id}\n")
                 else:
                     print(f"?{cmd_id} illegal move\n")
             elif cmd == "genmove":
                 color = color_map.get(args[0].upper(), 1)
-                move = select_sft_move(board, color)
-                board.play_move(move, color)
+                move = select_sft_move(
+                    board, color, root_last_passed=last_passed)
+                if not board.play_move(move, color):
+                    raise RuntimeError("SFT selector returned an illegal move")
+                last_passed = move is PASS
                 print(f"={cmd_id} {index_to_gtp(move, size)}\n")
             else:
                 print(f"?{cmd_id} unknown command\n")
@@ -719,11 +812,22 @@ class GTPClient:
             response = []
             while True:
                 line = self.proc.stdout.readline()
-                if not line or line.strip() == "":
+                if not line:
+                    if not response:
+                        raise RuntimeError(f"opponent EOF while answering {cmd_str!r}")
+                    break
+                if line.strip() == "":
                     break
                 response.append(line.strip())
             print(f"<<< RECV: {response}")
-            return "\n".join(response)
+            if not response:
+                raise RuntimeError(f"empty opponent response to {cmd_str!r}")
+            joined = "\n".join(response)
+            if response[0].startswith("?"):
+                raise RuntimeError(f"opponent rejected {cmd_str!r}: {joined}")
+            if not response[0].startswith("="):
+                raise RuntimeError(f"malformed opponent response to {cmd_str!r}: {joined}")
+            return joined
         else:
             # Deterministic fallback opponent (no randomness — SFT compliant).
             # Plays the lowest-index legal move (deterministic, no random.choice).
@@ -735,11 +839,15 @@ class GTPClient:
             elif "clear_board" in cmd_str:
                 self.sim_board = SFTGoBoard(self.size)
                 return "= "
+            elif "komi" in cmd_str:
+                self.sim_board.komi = int(cmd_str.split()[1])
+                return "= "
             elif "play" in cmd_str:
                 parts = cmd_str.split()
                 color = 1 if parts[1].upper() == "B" else 2
                 move = gtp_to_index(parts[2], self.size)
-                self.sim_board.play_move(move, color)
+                if move == RESIGN or not self.sim_board.play_move(move, color):
+                    raise RuntimeError(f"fallback rejected play: {cmd_str}")
                 return "= "
             elif "genmove" in cmd_str:
                 parts = cmd_str.split()
@@ -798,9 +906,84 @@ def get_area_score(board):
     return black_score, white_score
 
 
-def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8):
+def _sha256_bytes(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def _sha256_file(path):
+    with open(path, "rb") as handle:
+        return _sha256_bytes(handle.read())
+
+
+def _git_commit(root):
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+    except (OSError, subprocess.CalledProcessError):
+        return None
+
+
+def _opponent_identity(opponent_cmd):
+    if not opponent_cmd:
+        return {"kind": "deterministic-fallback", "command": None,
+                "executable": None, "executable_sha256": None}
+    executable = shutil.which(opponent_cmd[0])
+    if executable is None:
+        raise FileNotFoundError(f"opponent executable not found: {opponent_cmd[0]}")
+    return {
+        "kind": "external-gtp",
+        "command": list(opponent_cmd),
+        "executable": str(Path(executable).resolve()),
+        "executable_sha256": _sha256_file(executable),
+    }
+
+
+def _json_bytes(record):
+    return (json.dumps(record, indent=2, sort_keys=True) + "\n").encode()
+
+
+def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8,
+                   output_dir=None, komi=7):
+    """Run a registered match and seal immutable, hash-bound per-game receipts."""
+    if output_dir is None:
+        raise ValueError("an explicit output_dir is required for a registered match")
+    output_dir = Path(output_dir).resolve()
+    if output_dir.exists():
+        raise FileExistsError(f"match receipt directory already exists: {output_dir}")
+    if size < 1 or rounds < 1 or depth < 0 or not isinstance(komi, int):
+        raise ValueError("size/rounds must be positive, depth non-negative, and komi integer")
+
+    root = Path(__file__).resolve().parents[1]
+    source_path = Path(__file__).resolve()
+    registration = {
+        "schema": "fold-go-match-registration/v1",
+        "status": "registered",
+        "registered_at_utc": datetime.now(timezone.utc).isoformat(),
+        "source_commit": _git_commit(root),
+        "source_file": str(source_path.relative_to(root)),
+        "source_sha256": _sha256_file(source_path),
+        "opponent": _opponent_identity(opponent_cmd),
+        "board_size": size,
+        "rounds": rounds,
+        "search_ceiling": depth,
+        "node_budget_per_root_candidate": NODE_BUDGET,
+        "rules": "Tromp-Taylor area scoring with positional superko",
+        "komi": komi,
+        "colour_schedule": "SFT black on odd games, white on even games",
+        "hardware": {
+            "platform": platform.platform(),
+            "machine": platform.machine(),
+            "processor": platform.processor(),
+            "logical_cpu_count": os.cpu_count(),
+        },
+    }
+    output_dir.parent.mkdir(parents=True, exist_ok=True)
+    stage = Path(tempfile.mkdtemp(prefix="fold-go-match-", dir=output_dir.parent))
+    registration_bytes = _json_bytes(registration)
+    (stage / "registration.json").write_bytes(registration_bytes)
+
     print("=== SFT Go Tournament Referee ===")
-    results = {"SFT": 0, "Opponent": 0}
+    results = {"SFT": 0, "Opponent": 0, "Draw": 0}
 
     print(f"Starting {rounds}-round match on {size}x{size} board (search ceiling {depth})...")
     if opponent_cmd:
@@ -808,16 +991,28 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8):
     else:
         print("No external engine specified; running against deterministic fallback.")
 
-    round_results = []
-    for r in range(rounds):
+    game_hashes = []
+    client = None
+    try:
+      for r in range(rounds):
         sft_color = 1 if r % 2 == 0 else 2
-        board = SFTGoBoard(size)
+        board = SFTGoBoard(size, komi=komi)
         client = GTPClient(opponent_cmd)
-        client.send(f"boardsize {size}")
-        client.send("clear_board")
+        transcript = []
+        moves = []
+
+        def send(command):
+            response = client.send(command)
+            transcript.append({"command": command, "response": response})
+            return response
+
+        send(f"boardsize {size}")
+        send("clear_board")
+        send(f"komi {board.komi}")
 
         passes = 0
         moves_played = 0
+        resigned_by = None
         # Games end on two consecutive passes (the rules). Safety bound is counted
         # from the board itself: 2 * N^2 moves, never a truncation of normal play.
         max_moves = 2 * size * size
@@ -825,22 +1020,34 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8):
             current_player = 1 if moves_played % 2 == 0 else 2
 
             if current_player == sft_color:
-                move = select_sft_move(board, sft_color, ceiling=depth)
-                board.play_move(move, sft_color)
+                move = select_sft_move(
+                    board, sft_color, ceiling=depth,
+                    root_last_passed=passes > 0)
+                if not board.play_move(move, sft_color):
+                    raise RuntimeError("SFT selector returned an illegal move; round void")
                 move_str = index_to_gtp(move, size)
-                client.send(f"play {'B' if sft_color == 1 else 'W'} {move_str}")
+                send(f"play {'B' if sft_color == 1 else 'W'} {move_str}")
+                moves.append({"ply": moves_played + 1, "actor": "SFT",
+                              "colour": "B" if sft_color == 1 else "W",
+                              "move": move_str})
                 if move is None:
                     passes += 1
                 else:
                     passes = 0
             else:
                 opp_color = 3 - sft_color
-                resp = client.send(f"genmove {'B' if opp_color == 1 else 'W'}")
+                resp = send(f"genmove {'B' if opp_color == 1 else 'W'}")
                 parts = resp.split()
                 move_str = "pass"
                 if len(parts) > 1:
                     move_str = parts[1]
                 move = gtp_to_index(move_str, size)
+                moves.append({"ply": moves_played + 1, "actor": "Opponent",
+                              "colour": "B" if opp_color == 1 else "W",
+                              "move": move_str})
+                if move == RESIGN:
+                    resigned_by = opp_color
+                    break
                 if not board.play_move(move, opp_color):
                     # Honest abort: a desynced referee must halt, never score fiction.
                     print(f"REFEREE HALT: opponent move {move_str} rejected by the "
@@ -855,83 +1062,114 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8):
 
         client.close()
 
-        # Area scoring (integers only). Komi = 7 (fold-natural: smallest prime > 5).
-        black_score, white_score = get_area_score(board)
-        white_score += 7  # integer komi
+        if passes < 2 and resigned_by is None:
+            raise RuntimeError(f"round {r + 1} reached the move cap without pass-pass; round void")
 
-        winner = "Black" if black_score > white_score else "White"
+        # Literal agreed area scoring and recorded integer komi.
+        black_score, white_score = get_area_score(board)
+        white_score += board.komi
+
+        if resigned_by is not None:
+            winner = "White" if resigned_by == 1 else "Black"
+        elif black_score == white_score:
+            winner = "Draw"
+        else:
+            winner = "Black" if black_score > white_score else "White"
         sft_won = (winner == "Black" and sft_color == 1) or \
                   (winner == "White" and sft_color == 2)
 
-        if sft_won:
+        if winner == "Draw":
+            results["Draw"] += 1
+        elif sft_won:
             results["SFT"] += 1
         else:
             results["Opponent"] += 1
 
-        result_str = "SFT" if sft_won else "Opponent"
-        round_results.append((r + 1, "Black" if sft_color == 1 else "White", result_str,
-                              black_score, white_score))
+        result_str = "Draw" if winner == "Draw" else (
+            "SFT" if sft_won else "Opponent")
+        game_record = {
+            "schema": "fold-go-game-receipt/v1",
+            "status": "completed",
+            "game": r + 1,
+            "registration_sha256": _sha256_bytes(registration_bytes),
+            "sft_side": "Black" if sft_color == 1 else "White",
+            "winner": result_str,
+            "winner_colour": winner,
+            "score": {"black": black_score, "white_including_komi": white_score},
+            "resigned_by": ("Black" if resigned_by == 1 else
+                             "White" if resigned_by == 2 else None),
+            "moves": moves,
+            "final_position": board.position_key(),
+            "complete_history_sha256": _sha256_bytes(
+                "\n".join(sorted(board.history)).encode()),
+            "gtp_transcript": transcript,
+        }
+        game_bytes = _json_bytes(game_record)
+        game_name = f"game-{r + 1:03d}.json"
+        (stage / game_name).write_bytes(game_bytes)
+        game_hashes.append({"file": game_name, "sha256": _sha256_bytes(game_bytes)})
         print(f"Round {r + 1}: SFT={'Black' if sft_color == 1 else 'White'} | "
               f"Score B={black_score} W={white_score} | Winner: {result_str}")
 
-    print(f"\nTournament complete!")
-    print(f"Final Score: SFT {results['SFT']} - {results['Opponent']} Opponent")
+      print(f"\nTournament complete!")
+      print(f"Final Score: SFT {results['SFT']} - {results['Opponent']} Opponent"
+            f" - {results['Draw']} Draw")
 
-    # Write to GO_MATCHES.md
-    from datetime import date
-    with open("tools/GO_MATCHES.md", "w") as f:
-        f.write("# SFT Go Engine Match Ledger\n\n")
-        f.write(f"**Date:** {date.today().strftime('%B %d, %Y')}  \n")
-        f.write(f"**Engine:** SFT Type Zero Go v2.0 (zero parameters, "
-                f"iterative deepening ceiling {depth}, 2^19 node budget)  \n")
-        f.write(f"**Opponent:** {' '.join(opponent_cmd) if opponent_cmd else 'Deterministic Fallback'}  \n")
-        f.write(f"**Board Size:** {size}×{size}  \n\n")
-        f.write("## Match Results\n\n")
-        f.write("| Round | SFT Side | Score B | Score W | Winner |\n")
-        f.write("|---|---|---|---|---|\n")
-        for rnd, side, winner, bs, ws in round_results:
-            f.write(f"| {rnd} | {side} | {bs} | {ws} | {winner} |\n")
-        f.write("|---|---|---|---|---|\n")
-        f.write(f"| **Total** | — | — | — | **SFT won {results['SFT']}/{rounds} games** |\n")
-
-    print("Match ledger written to tools/GO_MATCHES.md.")
+      match_record = {
+          "schema": "fold-go-match-receipt/v1",
+          "status": "completed",
+          "registration_sha256": _sha256_bytes(registration_bytes),
+          "completed_at_utc": datetime.now(timezone.utc).isoformat(),
+          "games": game_hashes,
+          "result": {"SFT": results["SFT"], "Opponent": results["Opponent"],
+                     "Draw": results["Draw"]},
+      }
+      (stage / "match.json").write_bytes(_json_bytes(match_record))
+      os.replace(stage, output_dir)
+      print(f"Immutable match receipts sealed at {output_dir}.")
+      return match_record
+    except BaseException as error:
+      if client is not None:
+          try:
+              client.close()
+          except Exception:
+              pass
+      void_record = {
+          "schema": "fold-go-match-receipt/v1",
+          "status": "void",
+          "registration_sha256": _sha256_bytes(registration_bytes),
+          "failed_at_utc": datetime.now(timezone.utc).isoformat(),
+          "completed_games": game_hashes,
+          "error_type": type(error).__name__,
+          "error": str(error),
+      }
+      (stage / "match.json").write_bytes(_json_bytes(void_record))
+      os.replace(stage, output_dir)
+      raise
 
 
 def main():
-    size = 9
-    depth = 8
-    rounds = 4
-
-    if "--size" in sys.argv:
-        idx = sys.argv.index("--size")
-        size = int(sys.argv[idx + 1])
-        sys.argv.pop(idx + 1)
-        sys.argv.pop(idx)
-
-    if "--depth" in sys.argv:
-        idx = sys.argv.index("--depth")
-        depth = int(sys.argv[idx + 1])
-        sys.argv.pop(idx + 1)
-        sys.argv.pop(idx)
-
-    if "--rounds" in sys.argv:
-        idx = sys.argv.index("--rounds")
-        rounds = int(sys.argv[idx + 1])
-        sys.argv.pop(idx + 1)
-        sys.argv.pop(idx)
-
-    if len(sys.argv) > 1 and sys.argv[1] == "--server":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--server", action="store_true")
+    parser.add_argument("--check-gtp", action="store_true")
+    parser.add_argument("--size", type=int, default=9)
+    parser.add_argument("--depth", type=int, default=8)
+    parser.add_argument("--rounds", type=int, default=4)
+    parser.add_argument("--komi", type=int, default=7)
+    parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--engine", nargs=argparse.REMAINDER)
+    args = parser.parse_args()
+    if args.server:
         run_gtp_server()
-    elif len(sys.argv) > 1 and sys.argv[1] == "--check-gtp":
-        board = SFTGoBoard(size)
-        move = select_sft_move(board, 1, ceiling=depth)
-        print(f"GTP check passed. SFT plays first move: {index_to_gtp(move, size)}")
+    elif args.check_gtp:
+        board = SFTGoBoard(args.size)
+        move = select_sft_move(board, 1, ceiling=args.depth)
+        print(f"GTP check passed. SFT plays first move: {index_to_gtp(move, args.size)}")
     else:
-        opponent = None
-        if "--engine" in sys.argv:
-            idx = sys.argv.index("--engine")
-            opponent = sys.argv[idx + 1:]
-        run_tournament(opponent, size=size, rounds=rounds, depth=depth)
+        if args.output_dir is None:
+            parser.error("--output-dir is required for a tournament")
+        run_tournament(args.engine, size=args.size, rounds=args.rounds,
+                       depth=args.depth, output_dir=args.output_dir, komi=args.komi)
 
 
 if __name__ == "__main__":

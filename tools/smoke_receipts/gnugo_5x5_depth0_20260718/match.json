@@ -1,0 +1,20 @@
+{
+  "completed_at_utc": "2026-07-18T01:23:33.663965+00:00",
+  "games": [
+    {
+      "file": "game-001.json",
+      "sha256": "38ea00a24440b5d96630b7feffe4b00c12599f2453ad15dbd80aa0ea0e6ab88b"
+    },
+    {
+      "file": "game-002.json",
+      "sha256": "91349d6556ba312bd58a41ca0257c9691c21f5f7d505072e27ff7e9c469563fc"
+    }
+  ],
+  "registration_sha256": "5abd886824c11f171046d60a1b9513bcd9a4aad5f538fd84de8da29afd696c39",
+  "result": {
+    "Opponent": 2,
+    "SFT": 0
+  },
+  "schema": "fold-go-match-receipt/v1",
+  "status": "completed"
+}

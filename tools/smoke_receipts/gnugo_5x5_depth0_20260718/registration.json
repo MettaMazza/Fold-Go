@@ -1,0 +1,32 @@
+{
+  "board_size": 5,
+  "colour_schedule": "SFT black on odd games, white on even games",
+  "hardware": {
+    "logical_cpu_count": 32,
+    "machine": "arm64",
+    "platform": "macOS-15.6-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "komi": 0,
+  "node_budget_per_root_candidate": 524288,
+  "opponent": {
+    "command": [
+      "/opt/homebrew/bin/gnugo",
+      "--mode",
+      "gtp",
+      "--quiet"
+    ],
+    "executable": "/opt/homebrew/Cellar/gnu-go/3.8_1/bin/gnugo",
+    "executable_sha256": "069c9400d5f2c9cb931c0960cf9266ac0cf90a93f5dce812b75d463a05f214a8",
+    "kind": "external-gtp"
+  },
+  "registered_at_utc": "2026-07-18T01:23:32.554049+00:00",
+  "rounds": 2,
+  "rules": "Tromp-Taylor area scoring with positional superko",
+  "schema": "fold-go-match-registration/v1",
+  "search_ceiling": 0,
+  "source_commit": "03ff1eea2cffec7cd3fd0d608d3f35e9f9a799a0",
+  "source_file": "tools/measure_go.py",
+  "source_sha256": "5e96442a53c0989a87e33c92148d61e8806b5b6b3db2d18771aadd76dd916a96",
+  "status": "registered"
+}
