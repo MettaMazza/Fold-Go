@@ -20,17 +20,35 @@ def sha256(path: Path) -> str:
 def verify_match(directory: Path, require_current_source: bool = True) -> dict:
     directory = directory.resolve()
     registration_path = directory / "registration.json"
+    development_path = directory / "development_configuration.json"
+    if registration_path.exists() == development_path.exists():
+        raise RuntimeError(
+            "match directory must contain exactly one registration or development configuration")
+    development = development_path.exists()
+    configuration_path = development_path if development else registration_path
     match_path = directory / "match.json"
-    registration = json.loads(registration_path.read_text())
+    registration = json.loads(configuration_path.read_text())
     match = json.loads(match_path.read_text())
-    registration_sha = sha256(registration_path)
-    if match.get("registration_sha256") != registration_sha:
-        raise RuntimeError("match registration hash mismatch")
-    if registration.get("schema") not in {
+    registration_sha = sha256(configuration_path)
+    binding_field = ("development_configuration_sha256" if development
+                     else "registration_sha256")
+    if match.get(binding_field) != registration_sha:
+        raise RuntimeError("match configuration hash mismatch")
+    expected_configuration_schema = (
+        "fold-go-development-configuration/v1" if development else None)
+    if development:
+        if registration.get("schema") != expected_configuration_schema or \
+                registration.get("status") != "development-configured" or \
+                registration.get("governance_authority") is not False:
+            raise RuntimeError("unsupported development configuration")
+    elif registration.get("schema") not in {
             "fold-go-match-registration/v1", "fold-go-match-registration/v2",
             "fold-go-match-registration/v3"}:
         raise RuntimeError("unsupported match registration")
-    if match.get("schema") != "fold-go-match-receipt/v1":
+    expected_match_schema = (
+        "fold-go-development-measurement/v1" if development
+        else "fold-go-match-receipt/v1")
+    if match.get("schema") != expected_match_schema:
         raise RuntimeError("unsupported match receipt")
     if registration.get("schema") in {
             "fold-go-match-registration/v2", "fold-go-match-registration/v3"}:
@@ -39,7 +57,8 @@ def verify_match(directory: Path, require_current_source: bool = True) -> dict:
         if set(identity) != expected_commands or \
                 any(not str(identity[name]).startswith("=") for name in expected_commands):
             raise RuntimeError("registered opponent GTP identity is incomplete")
-    if registration.get("schema") == "fold-go-match-registration/v3":
+    if (registration.get("schema") == "fold-go-match-registration/v3"
+            or development):
         opponent = registration.get("opponent", {})
         if not isinstance(opponent.get("invocation_cwd"), str) or \
                 not isinstance(opponent.get("command_file_bindings"), list):
@@ -62,8 +81,13 @@ def verify_match(directory: Path, require_current_source: bool = True) -> dict:
         if sha256(game_path) != game_binding["sha256"]:
             raise RuntimeError(f"game receipt hash mismatch: {game_binding['file']}")
         game = json.loads(game_path.read_text())
-        if game.get("registration_sha256") != registration_sha:
-            raise RuntimeError(f"game registration hash mismatch: {game_binding['file']}")
+        if game.get(binding_field) != registration_sha:
+            raise RuntimeError(f"game configuration hash mismatch: {game_binding['file']}")
+        expected_game_schema = (
+            "fold-go-development-game/v1" if development
+            else "fold-go-game-receipt/v1")
+        if game.get("schema") != expected_game_schema:
+            raise RuntimeError(f"unsupported game receipt: {game_binding['file']}")
         if game.get("status") != "completed" or not game.get("gtp_transcript"):
             raise RuntimeError(f"incomplete game receipt: {game_binding['file']}")
         board = go.SFTGoBoard(registration["board_size"], komi=registration["komi"])
@@ -121,8 +145,9 @@ def verify_match(directory: Path, require_current_source: bool = True) -> dict:
         "schema": "fold-go-match-verification/v1",
         "status": "verified",
         "match_status": match["status"],
+        "run_kind": "development" if development else "measurement",
         "verified_games": verified_games,
-        "registration_sha256": registration_sha,
+        "configuration_sha256": registration_sha,
         "source_sha256": registration["source_sha256"],
         "opponent_executable_sha256": registration["opponent"]["executable_sha256"],
         "opponent_command_files": len(
