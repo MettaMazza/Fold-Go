@@ -65,6 +65,22 @@ class AugmentedStateTests(unittest.TestCase):
                 set(selected),
             )
 
+    def test_quiescence_preserves_every_legal_active_front_without_liberty_cutoff(self):
+        board = go.SFTGoBoard(5)
+        center = 2 * board.size + 2
+        self.assertTrue(board.play_move(center, 1))
+        _, liberties = board.get_group(center)
+        self.assertGreater(len(liberties), 2)
+        legal = board.get_legal_moves(2)
+        symmetries = go.get_augmented_symmetries(board)
+        expected = {
+            go.get_orbit_representative(move, board.size, symmetries)
+            for move in liberties if move in legal
+        }
+        selected = set(go.get_dynamic_sparse_moves(
+            board, 2, legal, tactical_only=True))
+        self.assertEqual(selected, expected)
+
     def test_root_pass_after_prior_pass_uses_terminal_area_value(self):
         board = go.SFTGoBoard(2, komi=0)
         move, value = go._eval_root_candidate(

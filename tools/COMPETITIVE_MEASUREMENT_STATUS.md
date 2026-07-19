@@ -73,3 +73,13 @@ dihedral orbit on an empty board. The former hand-listed 9x9 and 19x19
 star-point subsets are removed, so no board-size-specific opening preference
 can exclude a legal orbit before exact search. This is a completeness
 correction, not an official match or rank conclusion.
+
+## Complete active-front quiescence surface
+
+The development engine no longer uses a hand-selected two-liberty cutoff to
+decide which occupied-board fronts exist at a quiescence leaf. Both ordinary
+search and bounded quiescence now retain one augmented-symmetry representative
+of every legal liberty adjacent to every live group. The existing quiescence
+depth remains the stopping rule. A focused test constructs a four-liberty group
+and proves that every legal active-front orbit survives selection. This is an
+engine-completeness correction, not an official game, result, or rank claim.

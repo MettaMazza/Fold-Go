@@ -343,8 +343,6 @@ def get_dynamic_sparse_moves(board, to_move_color, legal_moves, tactical_only=Fa
 
     visited = [False] * (size * size)
     fronts = set()
-    tactical = set()
-    shape = set()
 
     for i in range(size * size):
         if board.board[i] != 0 and not visited[i]:
@@ -353,20 +351,13 @@ def get_dynamic_sparse_moves(board, to_move_color, legal_moves, tactical_only=Fa
                 visited[g] = True
             for lib in libs:
                 fronts.add(lib)
-                if board.board[i] == to_move_color:
-                    shape.add(lib)
-            if len(libs) <= 2:
-                for lib in libs:
-                    tactical.add(lib)
 
-    candidates = set()
-    for m in legal_moves:
-        if m in tactical:
-            candidates.add(m)
-        elif not tactical_only and m in fronts:
-            candidates.add(m)
-        elif not tactical_only and m in shape:
-            candidates.add(m)
+    # A quiescence leaf has no derived liberty-count threshold with which to
+    # declare one active front tactical and another inert. Retain every legal
+    # front in both the ordinary and quiescence surfaces; the existing depth
+    # bound is the complete stopping rule. This removes the former authored
+    # ``<= 2`` selector without adding a replacement preference.
+    candidates = {move for move in legal_moves if move in fronts}
 
     if not candidates:
         if tactical_only:
