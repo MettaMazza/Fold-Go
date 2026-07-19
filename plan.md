@@ -27,6 +27,9 @@
 9. The current decision instrument recomputed the first real 5×5 depth-3 SFT
    position from each colour: 2/2 recorded-move identity, six completed depth
    passes, and 27 exact root-candidate value rows.
+10. The same instrument recomputed each colour's second SFT turn: 2/2
+    recorded-move identity, six more completed depth passes, 39 exact
+    root-candidate rows, and exact rational argmax identity in every pass.
 
 Earlier agent diagnoses about packing width and an unconditional local one-eye
 pattern remain historical agent hypotheses, not Maria Smith's findings and not
@@ -36,8 +39,9 @@ limits on the programme.
 
 1. Extend the exact augmented-state comparison surface while preserving the
    current 134-state identity receipt.
-2. Preserve deterministic per-move candidate/value receipts in each applied
-   run and measure further depth on source-bound matched positions.
+2. Execute a complete current 5×5 depth-3 development match with deterministic
+   per-move candidate/value receipts, then measure further depth on the
+   source-bound positions where it changes the selected move.
 3. Execute the next GNU Go 9×9 or full-board run when Maria designates the
    build, under the complete current receipt protocol.
 4. Continue calculation development and real applied measurement until SFT

@@ -54,7 +54,28 @@ states can seed a larger exact decision panel. The next calculation is to
 extend the same trace across later, less symmetric positions where depth
 changes the selected move, then use that data to derive the next search change.
 
+That extension has now reached the second real SFT turn from each colour.
+Both positions completed all three depth passes; all six passes selected the
+exact rational argmax across **39 candidate rows**, and the current engine
+reproduced the recorded `B3` and `D4` decisions in **2/2** positions. Together
+with the opening panel, the current decision layer now has **4/4** source-bound
+depth-3 move identity over the first two SFT turns from both colour schedules,
+with 12 completed passes and 66 exact candidate rows. The second-turn receipt
+is `tools/match_receipts/development_depth3_second_turn_panel_20260719.json`.
+This is a positive expansion of applied calculation traceability; move choice
+remained identical, so it measures neither a playing-strength improvement nor
+a regression. It indicates that complete exact receipts remain practical after
+the symmetric opening and can now be carried through a whole game.
+
 The next state is to carry this complete augmented-state and move surface into Maria-authorized 9×9 and full-board benchmark runs, preserve every source-bound receipt, and continue the greater-than-50-percent victory campaign through stronger opponents. Nothing in the exact state constitution or current applied evidence establishes a theoretical wall: the engine already supplies exact finite legality and values, replayed competitive victories, complete augmented-state identity, and a depth-sensitive competitive search path toward the full board. The frontier is further calculation and applied rank development.
+
+A complete current 5×5 depth-3 development match is recommended now: both
+colour schedules already completed historically, the current engine has exact
+argmax and recorded-move identity through its first two turns, and the purpose
+is to extend that same receipt through every move rather than infer strength
+from four positions. If that full trace completes cleanly, the recommended
+next full trial is the current 9×9 GNU Go protocol. Maria decides whether and
+when either run is official; this recommendation does not authorize or gate it.
 
 ## Reproduce the exact surface
 
@@ -86,6 +107,7 @@ The 4×4 census is exhaustive and takes several minutes. Long-running solves mus
 | `tools/development_runs/matched_depth_divergence_20260719.json` | source-bound depth-1/depth-2 applied move/value comparison |
 | `tools/match_receipts/development_decision_receipts_5x5_d2_20260719/` | replay-verified two-game development run with 28 lossless per-move search decisions |
 | `tools/match_receipts/development_depth3_decision_panel_20260719.json` | current exact depth-3 decisions on the first real SFT position from each colour in the preserved matched games |
+| `tools/match_receipts/development_depth3_second_turn_panel_20260719.json` | current exact depth-3 decisions on the second real SFT position from each colour; six completed passes and 39 candidate rows |
 | `tools/*.log`, `gtp_logs/` | preserved raw transcripts |
 
 Read [AGENT.md](AGENT.md) before changing the system. Every admitted mechanism must be directly forced, forward-forced, or constitutionally re-derived, and every violation must halt.
