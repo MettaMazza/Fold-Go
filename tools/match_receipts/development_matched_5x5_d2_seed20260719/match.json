@@ -1,0 +1,21 @@
+{
+  "completed_at_utc": "2026-07-19T11:47:19.078137+00:00",
+  "development_configuration_sha256": "ec5c824495980f01f23d20b773b576a02df956f8bd8cc955d0510d09e9e395f8",
+  "games": [
+    {
+      "file": "game-001.json",
+      "sha256": "e144195b56f50f7fc778917ce46a890bdea3e2948fb389edb3ac60fe2738fcf3"
+    },
+    {
+      "file": "game-002.json",
+      "sha256": "dda454bcbf228e3b560e72cb1d325accb475765bd0d5e751ed4ebae4a0e01c2b"
+    }
+  ],
+  "result": {
+    "Draw": 0,
+    "Opponent": 1,
+    "SFT": 1
+  },
+  "schema": "fold-go-development-measurement/v1",
+  "status": "completed"
+}

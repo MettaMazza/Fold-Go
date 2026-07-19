@@ -1,0 +1,249 @@
+{
+  "analyses": [
+    {
+      "board_before_divergence": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "colour": "B",
+      "deeper_receipt_move": "B4",
+      "evaluations": [
+        {
+          "candidates": [
+            {
+              "denominator": 12,
+              "move": "A5",
+              "numerator": 6,
+              "status": "completed"
+            },
+            {
+              "denominator": 16,
+              "move": "B5",
+              "numerator": 10,
+              "status": "completed"
+            },
+            {
+              "denominator": 9,
+              "move": "C5",
+              "numerator": 5,
+              "status": "completed"
+            },
+            {
+              "denominator": 16,
+              "move": "B4",
+              "numerator": 10,
+              "status": "completed"
+            },
+            {
+              "denominator": 16,
+              "move": "C4",
+              "numerator": 10,
+              "status": "completed"
+            },
+            {
+              "denominator": 16,
+              "move": "C3",
+              "numerator": 10,
+              "status": "completed"
+            },
+            {
+              "denominator": 14,
+              "move": "pass",
+              "numerator": 6,
+              "status": "completed"
+            }
+          ],
+          "depth": 1,
+          "selected": "B5"
+        },
+        {
+          "candidates": [
+            {
+              "denominator": 16,
+              "move": "A5",
+              "numerator": 8,
+              "status": "completed"
+            },
+            {
+              "denominator": 23,
+              "move": "B5",
+              "numerator": 13,
+              "status": "completed"
+            },
+            {
+              "denominator": 19,
+              "move": "C5",
+              "numerator": 10,
+              "status": "completed"
+            },
+            {
+              "denominator": 24,
+              "move": "B4",
+              "numerator": 14,
+              "status": "completed"
+            },
+            {
+              "denominator": 23,
+              "move": "C4",
+              "numerator": 13,
+              "status": "completed"
+            },
+            {
+              "denominator": 14,
+              "move": "C3",
+              "numerator": 8,
+              "status": "completed"
+            },
+            {
+              "denominator": 16,
+              "move": "pass",
+              "numerator": 6,
+              "status": "completed"
+            }
+          ],
+          "depth": 2,
+          "selected": "B4"
+        }
+      ],
+      "game": 1,
+      "receipts": {
+        "deeper_file": "game-001.json",
+        "deeper_sha256": "e144195b56f50f7fc778917ce46a890bdea3e2948fb389edb3ac60fe2738fcf3",
+        "shallower_file": "game-001.json",
+        "shallower_sha256": "c940b05ec3f6b6bf7c54caeec818b17e4bdf9ea4b582f0af5da7a354ce1a04ae"
+      },
+      "root_last_passed": false,
+      "shallower_receipt_move": "B5",
+      "shared_prefix_plies": 0
+    },
+    {
+      "board_before_divergence": [
+        1,
+        2,
+        2,
+        2,
+        0,
+        1,
+        1,
+        2,
+        2,
+        2,
+        0,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        1,
+        1,
+        2,
+        0,
+        1,
+        1,
+        0,
+        1
+      ],
+      "colour": "W",
+      "deeper_receipt_move": "A3",
+      "evaluations": [
+        {
+          "candidates": [
+            {
+              "denominator": 30,
+              "move": "A3",
+              "numerator": 7,
+              "status": "completed"
+            },
+            {
+              "denominator": 30,
+              "move": "A1",
+              "numerator": 7,
+              "status": "completed"
+            },
+            {
+              "denominator": 32,
+              "move": "pass",
+              "numerator": 8,
+              "status": "completed"
+            }
+          ],
+          "depth": 1,
+          "selected": "pass"
+        },
+        {
+          "candidates": [
+            {
+              "denominator": 30,
+              "move": "A3",
+              "numerator": 7,
+              "status": "completed"
+            },
+            {
+              "denominator": 30,
+              "move": "A1",
+              "numerator": 7,
+              "status": "completed"
+            },
+            {
+              "denominator": 31,
+              "move": "pass",
+              "numerator": 7,
+              "status": "completed"
+            }
+          ],
+          "depth": 2,
+          "selected": "A3"
+        }
+      ],
+      "game": 2,
+      "receipts": {
+        "deeper_file": "game-002.json",
+        "deeper_sha256": "dda454bcbf228e3b560e72cb1d325accb475765bd0d5e751ed4ebae4a0e01c2b",
+        "shallower_file": "game-002.json",
+        "shallower_sha256": "54790c2f2628f1667e78ea26eb84786424b47505e67c5f070ff6304fb444dccb"
+      },
+      "root_last_passed": false,
+      "shallower_receipt_move": "pass",
+      "shared_prefix_plies": 23
+    }
+  ],
+  "inputs": {
+    "deeper_match_sha256": "08d6bb85a5522b55400142796b5712ab5790adb0a2617899c71eccefb3da8492",
+    "engine_source_sha256": "709e948e234602fc9841e7f3fc977e1159da980660e26331cec6665a475c9fa6",
+    "instrument_source_sha256": "8b4f0ac9d274241b78cb7e64387a3b8da9d87c60efd01be92a6b6a5124da4f78",
+    "shallower_match_sha256": "64035ccc68d24950a06cee25bb22933482fe4be1ca4a14d5e7d73076d1ae6b61"
+  },
+  "provenance": {
+    "agent": "Codex",
+    "authority": "Not Maria's official run, finding, loss, or rank conclusion.",
+    "model": "gpt-5.6-sol",
+    "origin": "Codex-authored applied development instrument",
+    "reasoning_level": "high"
+  },
+  "schema": "fold-go-depth-divergence-analysis/v1",
+  "status": "completed"
+}

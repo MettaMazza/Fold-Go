@@ -1,0 +1,47 @@
+{
+  "board_size": 5,
+  "colour_schedule": "SFT black on odd games, white on even games",
+  "governance_authority": false,
+  "hardware": {
+    "logical_cpu_count": 32,
+    "machine": "arm64",
+    "platform": "macOS-15.6-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "komi": 0,
+  "node_budget_per_root_candidate": 524288,
+  "opponent": {
+    "command": [
+      "/opt/homebrew/bin/gnugo",
+      "--mode",
+      "gtp",
+      "--level",
+      "10",
+      "--chinese-rules",
+      "--positional-superko",
+      "--never-resign",
+      "--seed",
+      "20260719"
+    ],
+    "command_file_bindings": [],
+    "executable": "/opt/homebrew/Cellar/gnu-go/3.8_1/bin/gnugo",
+    "executable_sha256": "069c9400d5f2c9cb931c0960cf9266ac0cf90a93f5dce812b75d463a05f214a8",
+    "gtp_identity": {
+      "list_commands": "= aa_confirm_safety\naccurate_approxlib\naccuratelib\nadvance_random_seed\nall_legal\nall_move_values\nanalyze_eyegraph\nanalyze_semeai\nanalyze_semeai_after_move\nattack\nattack_either\nblack\nblock_off\nboardsize\nbreak_in\ncaptures\nclear_board\nclear_cache\ncolor\ncombination_attack\ncombination_defend\nconnect\ncountlib\ncputime\ndecrease_depths\ndefend\ndefend_both\ndisconnect\ndoes_attack\ndoes_defend\ndoes_surround\ndragon_data\ndragon_status\ndragon_stones\ndraw_search_area\ndump_stack\necho\necho_err\nestimate_score\neval_eye\nexperimental_score\neye_data\nfinal_score\nfinal_status\nfinal_status_list\nfindlib\nfinish_sgftrace\nfixed_handicap\nfollowup_influence\ngenmove\ngenmove_black\ngenmove_white\nget_connection_node_counter\nget_handicap\nget_komi\nget_life_node_counter\nget_owl_node_counter\nget_random_seed\nget_reading_node_counter\nget_trymove_counter\ngg-undo\ngg_genmove\nhalf_eye_data\nhelp\nincrease_depths\ninitial_influence\ninvariant_hash_for_moves\ninvariant_hash\nis_legal\nis_surrounded\nkgs-genmove_cleanup\nknown_command\nkomi\nladder_attack\nlast_move\nlevel\nlimit_search\nlist_commands\nlist_stones\nloadsgf\nmove_influence\nmove_probabilities\nmove_reasons\nmove_uncertainty\nmove_history\nname\nnew_score\norientation\nowl_attack\nowl_connection_defends\nowl_defend\nowl_does_attack\nowl_does_defend\nowl_substantial\nowl_threaten_attack\nowl_threaten_defense\nplace_free_handicap\nplay\npopgo\nprintsgf\nprotocol_version\nquery_boardsize\nquery_orientation\nquit\nreg_genmove\nreport_uncertainty\nreset_connection_node_counter\nreset_life_node_counter\nreset_owl_node_counter\nreset_reading_node_counter\nreset_search_mask\nreset_trymove_counter\nrestricted_genmove\nsame_dragon\nset_free_handicap\nset_random_seed\nset_search_diamond\nset_search_limit\nshowboard\nstart_sgftrace\nsurround_map\ntactical_analyze_semeai\ntest_eyeshape\ntime_left\ntime_settings\ntop_moves\ntop_moves_black\ntop_moves_white\ntryko\ntrymove\ntune_move_ordering\nunconditional_status\nundo\nversion\nwhite\nworm_cutstone\nworm_data\nworm_stones",
+      "name": "= GNU Go",
+      "protocol_version": "= 2",
+      "version": "= 3.8"
+    },
+    "invocation_cwd": "/Users/mettamazza/Desktop/Fold Go",
+    "kind": "external-gtp"
+  },
+  "registered_at_utc": "2026-07-19T11:21:14.071520+00:00",
+  "rounds": 2,
+  "rules": "Tromp-Taylor area scoring with positional superko",
+  "schema": "fold-go-development-configuration/v1",
+  "search_ceiling": 1,
+  "source_commit": "401921db3fafdfe9612eb90180a487018716ede7",
+  "source_file": "tools/measure_go.py",
+  "source_sha256": "709e948e234602fc9841e7f3fc977e1159da980660e26331cec6665a475c9fa6",
+  "status": "development-configured"
+}
