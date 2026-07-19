@@ -107,3 +107,15 @@ Preserve every prior raw game and identify the exact protocol that produced it.
 - Never overwrite or delete a measured run. Index the exact executable output,
   protocol state, and any synchronization or termination fact. Do not call an
   agent-created expectation Maria's failed prediction.
+
+## Required end-of-turn report
+
+Every development turn must end with **Completed, Ongoing, Todo, and Suggested
+direction**. For every applied game or matched-position calculation, name the
+baseline and candidate and state separately what improved, what regressed, and
+what remained identical in outcomes, moves, values, depth, nodes, time, memory,
+rules and receipt closure. Then state what the pattern could indicate as an
+explicit engineering inference and the next concrete calculation intended to
+advance it. A development regression is reported but is not a theoretical
+wall, Maria-authored loss, rank conclusion or campaign endpoint. A positive
+result is reported directly and is not minimized. Maria assigns conclusions.
