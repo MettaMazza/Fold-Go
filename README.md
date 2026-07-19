@@ -46,6 +46,13 @@ recorded `C4` decision in **2/2** positions. The receipt is
 `tools/match_receipts/development_depth3_decision_panel_20260719.json`.
 This extends exact decision traceability to depth 3; it does not rename the
 historical development games as official results or assign their conclusion.
+No playing-strength improvement or regression was measured because the search
+behaviour was unchanged: the improvement is receipt completeness, with 2/2
+move identity and no decision regression. This could indicate that the current
+instrumentation is behaviour-preserving and that the historical depth-3 game
+states can seed a larger exact decision panel. The next calculation is to
+extend the same trace across later, less symmetric positions where depth
+changes the selected move, then use that data to derive the next search change.
 
 The next state is to carry this complete augmented-state and move surface into Maria-authorized 9×9 and full-board benchmark runs, preserve every source-bound receipt, and continue the greater-than-50-percent victory campaign through stronger opponents. Nothing in the exact state constitution or current applied evidence establishes a theoretical wall: the engine already supplies exact finite legality and values, replayed competitive victories, complete augmented-state identity, and a depth-sensitive competitive search path toward the full board. The frontier is further calculation and applied rank development.
 
