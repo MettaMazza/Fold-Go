@@ -631,17 +631,41 @@ def root_candidates(board, color):
     return candidates + [PASS]
 
 
-def select_sft_move(board, color, ceiling=8, root_last_passed=False):
-    """Select the best move using SFT iterative deepening with a parallel root."""
+def _decision_row(move, value, size):
+    if value is None:
+        return {"move": index_to_gtp(move, size),
+                "status": "node-budget-incomplete"}
+    numerator, denominator = unpack_value(value)
+    return {
+        "move": index_to_gtp(move, size),
+        "status": "completed",
+        "numerator": numerator,
+        "denominator": denominator,
+    }
+
+
+def select_sft_move(board, color, ceiling=8, root_last_passed=False,
+                    decision_trace=None):
+    """Select the best move and optionally expose the exact completed passes."""
     candidates = root_candidates(board, color)
     best_move = candidates[0]
+    completed_depth = 0
+    depth_receipts = []
 
     pool = _get_pool()
     for depth in range(1, ceiling + 1):
         results = pool.map(_eval_root_candidate,
                            [(board, color, m, depth, bool(root_last_passed))
                             for m in candidates])
+        rows = [_decision_row(move, value, board.size)
+                for move, value in results]
         if any(v is None for _, v in results):
+            depth_receipts.append({
+                "depth": depth,
+                "status": "node-budget-incomplete",
+                "selected": None,
+                "candidates": rows,
+            })
             break  # a subtree hit its node budget — keep the last completed pass
         depth_best_move = None
         depth_best_set = False
@@ -653,6 +677,31 @@ def select_sft_move(board, color, ceiling=8, root_last_passed=False):
                 depth_best_set = True
         if depth_best_set:
             best_move = depth_best_move
+            completed_depth = depth
+        depth_receipts.append({
+            "depth": depth,
+            "status": "completed",
+            "selected": (index_to_gtp(depth_best_move, board.size)
+                         if depth_best_set else None),
+            "candidates": rows,
+        })
+
+    if decision_trace is not None:
+        decision_trace.update({
+            "schema": "fold-go-search-decision/v1",
+            "board_before": board.position_key(),
+            "complete_history_sha256": _sha256_bytes(
+                "\n".join(sorted(board.history)).encode()),
+            "to_move": "B" if color == 1 else "W",
+            "root_last_passed": bool(root_last_passed),
+            "search_ceiling": ceiling,
+            "node_budget_per_root_candidate": NODE_BUDGET,
+            "candidate_order": [index_to_gtp(move, board.size)
+                                for move in candidates],
+            "completed_depth": completed_depth,
+            "selected": index_to_gtp(best_move, board.size),
+            "depths": depth_receipts,
+        })
 
     return best_move
 
@@ -1051,16 +1100,19 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8,
             current_player = 1 if moves_played % 2 == 0 else 2
 
             if current_player == sft_color:
+                decision = {}
                 move = select_sft_move(
                     board, sft_color, ceiling=depth,
-                    root_last_passed=passes > 0)
+                    root_last_passed=passes > 0,
+                    decision_trace=decision)
                 if not board.play_move(move, sft_color):
                     raise RuntimeError("SFT selector returned an illegal move; round void")
                 move_str = index_to_gtp(move, size)
                 send(f"play {'B' if sft_color == 1 else 'W'} {move_str}")
                 moves.append({"ply": moves_played + 1, "actor": "SFT",
                               "colour": "B" if sft_color == 1 else "W",
-                              "move": move_str})
+                              "move": move_str,
+                              "search_decision": decision})
                 if move is None:
                     passes += 1
                 else:
@@ -1119,8 +1171,8 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8,
         result_str = "Draw" if winner == "Draw" else (
             "SFT" if sft_won else "Opponent")
         game_record = {
-            "schema": ("fold-go-development-game/v1" if development
-                       else "fold-go-game-receipt/v1"),
+            "schema": ("fold-go-development-game/v2" if development
+                       else "fold-go-game-receipt/v2"),
             "status": "completed",
             "game": r + 1,
             "sft_side": "Black" if sft_color == 1 else "White",

@@ -41,6 +41,11 @@ and conclusions.
   candidate fractions change the selected move `B5 → B4` in game 1 and
   `pass → A3` in game 2. This is applied evidence that deeper calculation is
   active in real play, not an official result or rank conclusion.
+- The current per-move decision-receipt development run binds **28** SFT
+  moves, **56** completed depth passes, and **444** exact candidate
+  numerator/denominator rows across two semantically replayed 5×5 games:
+  `tools/match_receipts/development_decision_receipts_5x5_d2_20260719/`.
+  The tally remains named development data; Maria assigns any conclusion.
 
 These mechanisms and receipts establish the current engine stage. The next
 state is a Maria-authorized 9×9/full-board campaign on this secured surface,

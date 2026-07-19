@@ -39,6 +39,8 @@ Dihedral reduction is valid only when it preserves the complete state on which l
 
 The current implementation suite includes optimized-versus-no-cache comparisons on reachable augmented small-board states. Its sealed six-ply receipt covers 134 distinct states and 24 pass-pass terminals with exact value identity. Empty-board selection preserves every legal dihedral orbit, and ordinary and quiescence selection preserve every legal active front. This remains a bounded competitive search rather than the exhaustive `.ep` small-board solver; the distinction identifies the two executable proof surfaces without reducing either.
 
+Competitive receipts now bind every SFT move to its pre-move augmented state, complete ordered root surface, exact candidate fractions at each completed depth, node-budget status and deterministic argmax. The first applied two-game receipt contains 28/28 such decisions, 56 completed depth passes and 444 exact candidate rows, and passes independent semantic replay. This strengthens the trace from exact state constitution to real-play selection without assigning an agent-owned rank conclusion.
+
 ## 4. Applied calculation continuation
 
 Matched 5×5 development receipts hold the opponent, rules, komi, colours, source, and starting conditions fixed while changing depth from one to two. Exact candidate fractions change the selected move from `B5` to `B4` on the empty board and from `pass` to `A3` after a shared 23-ply prefix. This demonstrates that the derived depth relation is active in real play. It is applied development evidence, not an agent-owned official result, loss, or rank conclusion.

@@ -36,6 +36,8 @@ The competitive implementation now binds board, mover, complete positional-super
 
 The current search also preserves one representative from every legal empty-board dihedral orbit and every legal active front at quiescence, removing the earlier board-size-specific opening subset and authored two-liberty front cutoff. In a source-bound matched 5×5 depth comparison, the engine's exact root values changed the selected move from `B5` at depth 1 to `B4` at depth 2 in one game, and from `pass` to `A3` in the second. This is implemented evidence that the derived depth relation is active in real play; it is not an agent-owned rank conclusion.
 
+Every new SFT move can now carry a lossless search-decision receipt: the exact board and complete-history address, ordered root candidates, numerator/denominator for every candidate at every completed depth, node-budget status, deepest completed pass, and final deterministic argmax. A matched two-game 5×5 depth-2 GNU Go development execution sealed **28/28** SFT decisions, **56** completed depth passes, and **444** exact candidate-value rows; independent semantic replay verified both games and the full hash chain. The preserved development tally is 1 SFT-side game, 1 opponent-side game and 0 draws. It is applied infrastructure and calculation data, not Maria Smith's official game, rank result, loss, or campaign conclusion.
+
 The next state is to carry this complete augmented-state and move surface into Maria-authorized 9×9 and full-board benchmark runs, preserve every source-bound receipt, and continue the greater-than-50-percent victory campaign through stronger opponents. Nothing in the exact state constitution or current applied evidence establishes a theoretical wall: the engine already supplies exact finite legality and values, replayed competitive victories, complete augmented-state identity, and a depth-sensitive competitive search path toward the full board. The frontier is further calculation and applied rank development.
 
 ## Reproduce the exact surface
@@ -66,6 +68,7 @@ The 4×4 census is exhaustive and takes several minutes. Long-running solves mus
 | `tools/measure_go.py` | bounded competitive development harness |
 | `tools/RESULTS_INDEX.md` | evidence, hashes, provenance, and protocol facts |
 | `tools/development_runs/matched_depth_divergence_20260719.json` | source-bound depth-1/depth-2 applied move/value comparison |
+| `tools/match_receipts/development_decision_receipts_5x5_d2_20260719/` | replay-verified two-game development run with 28 lossless per-move search decisions |
 | `tools/*.log`, `gtp_logs/` | preserved raw transcripts |
 
 Read [AGENT.md](AGENT.md) before changing the system. Every admitted mechanism must be directly forced, forward-forced, or constitutionally re-derived, and every violation must halt.

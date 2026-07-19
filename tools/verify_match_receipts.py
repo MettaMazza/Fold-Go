@@ -83,10 +83,11 @@ def verify_match(directory: Path, require_current_source: bool = True) -> dict:
         game = json.loads(game_path.read_text())
         if game.get(binding_field) != registration_sha:
             raise RuntimeError(f"game configuration hash mismatch: {game_binding['file']}")
-        expected_game_schema = (
-            "fold-go-development-game/v1" if development
-            else "fold-go-game-receipt/v1")
-        if game.get("schema") != expected_game_schema:
+        expected_game_schemas = ({
+            "fold-go-development-game/v1", "fold-go-development-game/v2"}
+            if development else
+            {"fold-go-game-receipt/v1", "fold-go-game-receipt/v2"})
+        if game.get("schema") not in expected_game_schemas:
             raise RuntimeError(f"unsupported game receipt: {game_binding['file']}")
         if game.get("status") != "completed" or not game.get("gtp_transcript"):
             raise RuntimeError(f"incomplete game receipt: {game_binding['file']}")
@@ -99,6 +100,11 @@ def verify_match(directory: Path, require_current_source: bool = True) -> dict:
             expected_colour = 1 if expected_ply % 2 == 1 else 2
             if move_row.get("colour") != ("B" if expected_colour == 1 else "W"):
                 raise RuntimeError(f"move colour mismatch: {game_binding['file']}")
+            if (game["schema"].endswith("/v2")
+                    and move_row.get("actor") == "SFT"):
+                _verify_search_decision(
+                    board, move_row, expected_colour, passes > 0,
+                    registration, game_binding["file"])
             move = go.gtp_to_index(move_row["move"], board.size)
             if move == go.RESIGN:
                 resigned_by = expected_colour
@@ -154,6 +160,67 @@ def verify_match(directory: Path, require_current_source: bool = True) -> dict:
             registration["opponent"].get("command_file_bindings", [])),
         "semantic_replay": "passed",
     }
+
+
+def _selected_candidate(rows: list[dict]) -> str | None:
+    selected = None
+    selected_value = go.VALUE_FLOOR
+    for row in rows:
+        if row.get("status") != "completed":
+            return None
+        value = go.pack_value(row["numerator"], row["denominator"])
+        if go.value_greater(value, selected_value):
+            selected = row["move"]
+            selected_value = value
+    return selected
+
+
+def _verify_search_decision(board, move_row: dict, colour: int,
+                            last_passed: bool, registration: dict,
+                            game_file: str) -> None:
+    decision = move_row.get("search_decision")
+    if not isinstance(decision, dict) or decision.get("schema") \
+            != "fold-go-search-decision/v1":
+        raise RuntimeError(f"missing SFT search decision: {game_file}")
+    history_sha = hashlib.sha256(
+        "\n".join(sorted(board.history)).encode()).hexdigest()
+    expected_candidates = [
+        go.index_to_gtp(move, board.size)
+        for move in go.root_candidates(board, colour)
+    ]
+    if (decision.get("board_before") != board.position_key()
+            or decision.get("complete_history_sha256") != history_sha
+            or decision.get("to_move") != ("B" if colour == 1 else "W")
+            or decision.get("root_last_passed") is not bool(last_passed)
+            or decision.get("search_ceiling") != registration["search_ceiling"]
+            or decision.get("node_budget_per_root_candidate")
+            != registration["node_budget_per_root_candidate"]
+            or decision.get("candidate_order") != expected_candidates
+            or decision.get("selected") != move_row["move"]):
+        raise RuntimeError(f"SFT search-decision binding mismatch: {game_file}")
+    completed_depth = 0
+    selected = expected_candidates[0]
+    for expected_depth, depth in enumerate(decision.get("depths", []), 1):
+        if depth.get("depth") != expected_depth:
+            raise RuntimeError(f"non-contiguous search depth: {game_file}")
+        if [row.get("move") for row in depth.get("candidates", [])] \
+                != expected_candidates:
+            raise RuntimeError(f"search candidate order mismatch: {game_file}")
+        calculated = _selected_candidate(depth["candidates"])
+        if depth.get("status") == "completed":
+            if depth.get("selected") != calculated:
+                raise RuntimeError(f"search argmax mismatch: {game_file}")
+            if calculated is not None:
+                selected = calculated
+                completed_depth = expected_depth
+        else:
+            if depth.get("status") != "node-budget-incomplete" \
+                    or calculated is not None or depth.get("selected") is not None:
+                raise RuntimeError(f"invalid incomplete search pass: {game_file}")
+            break
+    if (decision.get("completed_depth") != completed_depth
+            or decision.get("selected") != selected):
+        raise RuntimeError(f"search final-selection mismatch: {game_file}")
 
 
 def main() -> None:

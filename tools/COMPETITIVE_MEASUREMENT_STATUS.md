@@ -57,7 +57,8 @@ Round-1 synchronization defect. Maria determines the conclusions and next run.
 - Extend the reachable augmented-state census beyond the sealed six-ply boundary.
 - Re-run the complete local exact and referee anchors after the receipt layer is
   implemented.
-- Add deterministic per-move search-decision receipts bound into each game.
+- Carry the implemented deterministic per-move search-decision receipts into
+  every subsequent development or Maria-authorized game.
 - Register the next rank opponent, settings, output directory, and stopping
   rule when Maria orders the run.
 
@@ -100,12 +101,30 @@ This proves that the implemented depth relation changes real-play selection
 through exact computed values. It is source-bound development evidence, not
 Maria Smith's official game, rank conclusion, loss, or campaign endpoint.
 
+## Lossless per-move decision receipts
+
+The match writer now binds every SFT decision to the board and complete
+positional-superko history before the move. Each receipt preserves candidate
+order, every exact numerator/denominator returned at each completed depth,
+node-budget completion status, deepest completed pass, and the selected exact
+argmax. The independent verifier reconstructs each board/history address,
+regenerates the complete candidate order, replays the strict-greater rational
+argmax, and checks the selected move before normal game replay.
+
+The matched 5×5 depth-2 GNU Go development execution at
+`tools/match_receipts/development_decision_receipts_5x5_d2_20260719/`
+completed both games and verified **28/28** SFT decision receipts, **56**
+completed depth passes and **444** candidate-value rows. The receipt itself
+preserves the 1/1/0 development tally and both scores; no tally is promoted to
+an official game, finding, loss or rank conclusion by this instrumentation.
+
 ## Current stage and next state
 
 The current engine has complete augmented-state identity, typed TT bounds,
 universal pass, complete empty-board orbit retention, complete active-front
 retention, source/opponent-bound immutable receipts, and applied depth-sensitive
-move evidence. The next state is to use this secured calculation surface in
+move evidence with lossless per-move search decisions. The next state is to use
+this secured calculation surface in
 Maria-authorized 9×9 and full-board runs and continue development until the
 strictly-over-50-percent victory criterion is attained at each named level.
 Exact finite proofs, two replay-verified 9×9 victories, the recovered 19×19

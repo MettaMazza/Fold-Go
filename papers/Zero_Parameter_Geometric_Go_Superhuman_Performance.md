@@ -89,6 +89,8 @@ These properties make later matches replayable and expose protocol defects. They
 
 The current implementation has now executed those repairs. A sealed six-ply receipt gives typed-TT/no-cache equality on 134 augmented states and 24 pass-pass terminals. The empty board retains every legal dihedral orbit and the occupied/quiescence surface retains every legal active front. In a matched 5×5 development comparison, exact root fractions change the selected move `B5 → B4` between depths one and two in one game and `pass → A3` in the other. This is source-bound applied evidence that the depth relation is active in real play, not Maria Smith's official game or rank conclusion.
 
+The game receipt now also preserves the calculation itself at every SFT move: exact augmented-state address, complete candidate order, exact fraction for every candidate at every completed depth, node-budget status, and final deterministic argmax. A matched two-game 5×5 depth-2 GNU Go development execution sealed 28/28 SFT decisions, 56 completed depth passes, and 444 candidate-value rows; independent replay verified both complete games and the hash chain. The named 1/1/0 tally remains development data, not an agent declaration of rank, victory, loss, or endpoint.
+
 The next state is a Maria-authorized 9×9 or full-board campaign on this secured calculation and receipt surface, followed by continued development until the strictly-over-50-percent criterion is attained at each named level. The exact solver, replayed 9×9 victories, recovered 19×19 measurement, complete augmented-state constitution, and active depth-sensitive search provide an executable route; no theorem-derived wall has been established.
 
 ## 5. Reproducibility

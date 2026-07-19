@@ -153,42 +153,36 @@ class AugmentedStateTests(unittest.TestCase):
         self.assertIsNone(value)
 
     def test_registered_match_writes_hash_bound_receipts_and_never_overwrites(self):
-        original_selector = go.select_sft_move
-        go.select_sft_move = lambda board, color, ceiling=8, \
-            root_last_passed=False: go.PASS
-        try:
-            with tempfile.TemporaryDirectory() as temporary:
-                output = Path(temporary) / "sealed-match"
-                result = go.run_tournament(
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "sealed-match"
+            result = go.run_tournament(
+                size=1, rounds=1, depth=0, komi=0, output_dir=output)
+            self.assertEqual(result["status"], "completed")
+            registration = (output / "registration.json").read_bytes()
+            registration_record = json.loads(registration)
+            game = (output / "game-001.json").read_bytes()
+            match = json.loads((output / "match.json").read_text())
+            game_record = json.loads(game)
+            self.assertEqual(
+                game_record["registration_sha256"],
+                hashlib.sha256(registration).hexdigest())
+            self.assertEqual(
+                match["games"][0]["sha256"], hashlib.sha256(game).hexdigest())
+            self.assertTrue(game_record["gtp_transcript"])
+            self.assertEqual(
+                registration_record["schema"],
+                "fold-go-match-registration/v3")
+            self.assertEqual(
+                set(registration_record["opponent"]["gtp_identity"]),
+                {"protocol_version", "name", "version", "list_commands"})
+            self.assertEqual(
+                registration_record["opponent"]["command_file_bindings"], [])
+            verification = verify_match(output)
+            self.assertEqual(verification["status"], "verified")
+            self.assertEqual(verification["verified_games"], 1)
+            with self.assertRaises(FileExistsError):
+                go.run_tournament(
                     size=1, rounds=1, depth=0, komi=0, output_dir=output)
-                self.assertEqual(result["status"], "completed")
-                registration = (output / "registration.json").read_bytes()
-                registration_record = json.loads(registration)
-                game = (output / "game-001.json").read_bytes()
-                match = json.loads((output / "match.json").read_text())
-                game_record = json.loads(game)
-                self.assertEqual(
-                    game_record["registration_sha256"],
-                    hashlib.sha256(registration).hexdigest())
-                self.assertEqual(
-                    match["games"][0]["sha256"], hashlib.sha256(game).hexdigest())
-                self.assertTrue(game_record["gtp_transcript"])
-                self.assertEqual(
-                    registration_record["schema"],
-                    "fold-go-match-registration/v3")
-                self.assertEqual(
-                    set(registration_record["opponent"]["gtp_identity"]),
-                    {"protocol_version", "name", "version", "list_commands"})
-                self.assertEqual(
-                    registration_record["opponent"]["command_file_bindings"], [])
-                verification = verify_match(output)
-                self.assertEqual(verification["status"], "verified")
-                self.assertEqual(verification["verified_games"], 1)
-                with self.assertRaises(FileExistsError):
-                    go.run_tournament(
-                        size=1, rounds=1, depth=0, komi=0, output_dir=output)
-        finally:
-            go.select_sft_move = original_selector
 
     def test_opponent_command_files_are_hash_bound(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -208,28 +202,22 @@ class AugmentedStateTests(unittest.TestCase):
             ])
 
     def test_development_run_is_not_labelled_as_an_official_registration(self):
-        original_selector = go.select_sft_move
-        go.select_sft_move = lambda board, color, ceiling=8, \
-            root_last_passed=False: go.PASS
-        try:
-            with tempfile.TemporaryDirectory() as temporary:
-                output = Path(temporary) / "development"
-                result = go.run_tournament(
-                    size=1, rounds=1, depth=0, komi=0,
-                    output_dir=output, development=True)
-                configuration = json.loads(
-                    (output / "development_configuration.json").read_text())
-                self.assertEqual(
-                    configuration["schema"],
-                    "fold-go-development-configuration/v1")
-                self.assertEqual(
-                    configuration["status"], "development-configured")
-                self.assertFalse(configuration["governance_authority"])
-                self.assertFalse((output / "registration.json").exists())
-                self.assertIn(
-                    "development_configuration_sha256", result)
-        finally:
-            go.select_sft_move = original_selector
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "development"
+            result = go.run_tournament(
+                size=1, rounds=1, depth=0, komi=0,
+                output_dir=output, development=True)
+            configuration = json.loads(
+                (output / "development_configuration.json").read_text())
+            self.assertEqual(
+                configuration["schema"],
+                "fold-go-development-configuration/v1")
+            self.assertEqual(
+                configuration["status"], "development-configured")
+            self.assertFalse(configuration["governance_authority"])
+            self.assertFalse((output / "registration.json").exists())
+            self.assertIn(
+                "development_configuration_sha256", result)
 
 
 if __name__ == "__main__":
