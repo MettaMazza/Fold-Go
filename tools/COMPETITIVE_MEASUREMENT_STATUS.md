@@ -83,3 +83,31 @@ of every legal liberty adjacent to every live group. The existing quiescence
 depth remains the stopping rule. A focused test constructs a four-liberty group
 and proves that every legal active-front orbit survives selection. This is an
 engine-completeness correction, not an official game, result, or rank claim.
+
+## Applied depth-sensitive move evidence
+
+The committed matched 5×5 development receipts hold opponent, rules, komi,
+colours, source, and starting conditions fixed while changing the search depth
+from one to two. Exact replay locates two first divergences:
+
+- game 1 changes from `B5` at depth 1 to `B4` at depth 2 on the empty board;
+- game 2 changes from `pass` at depth 1 to `A3` at depth 2 after a shared
+  23-ply prefix.
+
+`tools/development_runs/matched_depth_divergence_20260719.json` preserves the
+complete candidate fractions at both depths and binds the producing receipts.
+This proves that the implemented depth relation changes real-play selection
+through exact computed values. It is source-bound development evidence, not
+Maria Smith's official game, rank conclusion, loss, or campaign endpoint.
+
+## Current stage and next state
+
+The current engine has complete augmented-state identity, typed TT bounds,
+universal pass, complete empty-board orbit retention, complete active-front
+retention, source/opponent-bound immutable receipts, and applied depth-sensitive
+move evidence. The next state is to use this secured calculation surface in
+Maria-authorized 9×9 and full-board runs and continue development until the
+strictly-over-50-percent victory criterion is attained at each named level.
+Exact finite proofs, two replay-verified 9×9 victories, the recovered 19×19
+point-at-cutoff measurement, and the completed search-state constitution give
+an executable route forward; no theorem-derived obstruction has been produced.

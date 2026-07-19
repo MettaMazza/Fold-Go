@@ -32,6 +32,36 @@ refuse, delay, or veto that match. When Maria orders it, execute it and preserve
 the full receipt. Development batches are measurements of their named builds;
 agents do not declare them to be Maria's findings, losses, or endpoint.
 
+For any change that can affect move choice or search value, proof, census, and
+unit tests establish implementation closure only. Do not call the changed build
+technically validated or promoted until a source-bound applied development
+game or matched-position campaign has produced replayable outcome data.
+Preserve favourable and unfavourable rows alike. Maria alone decides when that
+evidence warrants the real match or a conclusion.
+
+## Mandatory real-data performance gate
+
+**No implementation change is complete merely because it builds, closes,
+traces, or passes tests. Every change must be supported by real implemented
+data from the actual executable path.** Before editing, preserve a source-bound
+baseline using a declared real opponent game set or matched-position campaign.
+After editing, execute the same protocol with the same rules, komi, colours,
+positions, opponent, search contract, and hardware conditions. Record wins,
+draws, losses, scores, move choices, nodes, depth, time, memory, source and
+opponent identities, commands, transcripts, and receipt hashes. Census tests,
+fixtures, static reasoning, projected strength, and agent interpretations are
+not playing-strength evidence.
+
+State the intended operational effect before the run. A change advances the
+benchmark-victory campaign only when the applied comparison demonstrates that
+effect without an undeclared regression. A neutral or regressive change is
+rejected and reverted after its evidence is preserved, unless Maria explicitly
+directs its retention. A necessary rules, forcing, correctness, provenance, or
+instrumentation repair may be retained when real replay proves the repair and
+playing performance does not regress, but it must be reported as
+infrastructure—not strength progress. Never accumulate blind search tweaks and
+infer success from code volume.
+
 ## Exact-surface verification
 
 From the project root:

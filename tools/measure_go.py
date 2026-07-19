@@ -967,7 +967,7 @@ def _json_bytes(record):
 
 
 def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8,
-                   output_dir=None, komi=7):
+                   output_dir=None, komi=7, development=False):
     """Run a registered match and seal immutable, hash-bound per-game receipts."""
     if output_dir is None:
         raise ValueError("an explicit output_dir is required for a registered match")
@@ -980,8 +980,9 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8,
     root = Path(__file__).resolve().parents[1]
     source_path = Path(__file__).resolve()
     registration = {
-        "schema": "fold-go-match-registration/v3",
-        "status": "registered",
+        "schema": ("fold-go-development-configuration/v1" if development
+                   else "fold-go-match-registration/v3"),
+        "status": "development-configured" if development else "registered",
         "registered_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_commit": _git_commit(root),
         "source_file": str(source_path.relative_to(root)),
@@ -994,6 +995,7 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8,
         "rules": "Tromp-Taylor area scoring with positional superko",
         "komi": komi,
         "colour_schedule": "SFT black on odd games, white on even games",
+        "governance_authority": False if development else None,
         "hardware": {
             "platform": platform.platform(),
             "machine": platform.machine(),
@@ -1004,7 +1006,12 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8,
     output_dir.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix="fold-go-match-", dir=output_dir.parent))
     registration_bytes = _json_bytes(registration)
-    (stage / "registration.json").write_bytes(registration_bytes)
+    configuration_name = (
+        "development_configuration.json" if development else "registration.json")
+    (stage / configuration_name).write_bytes(registration_bytes)
+    binding_field = (
+        "development_configuration_sha256" if development
+        else "registration_sha256")
 
     print("=== SFT Go Tournament Referee ===")
     results = {"SFT": 0, "Opponent": 0, "Draw": 0}
@@ -1112,10 +1119,10 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8,
         result_str = "Draw" if winner == "Draw" else (
             "SFT" if sft_won else "Opponent")
         game_record = {
-            "schema": "fold-go-game-receipt/v1",
+            "schema": ("fold-go-development-game/v1" if development
+                       else "fold-go-game-receipt/v1"),
             "status": "completed",
             "game": r + 1,
-            "registration_sha256": _sha256_bytes(registration_bytes),
             "sft_side": "Black" if sft_color == 1 else "White",
             "winner": result_str,
             "winner_colour": winner,
@@ -1128,6 +1135,7 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8,
                 "\n".join(sorted(board.history)).encode()),
             "gtp_transcript": transcript,
         }
+        game_record[binding_field] = _sha256_bytes(registration_bytes)
         game_bytes = _json_bytes(game_record)
         game_name = f"game-{r + 1:03d}.json"
         (stage / game_name).write_bytes(game_bytes)
@@ -1140,14 +1148,15 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8,
             f" - {results['Draw']} Draw")
 
       match_record = {
-          "schema": "fold-go-match-receipt/v1",
+          "schema": ("fold-go-development-measurement/v1" if development
+                     else "fold-go-match-receipt/v1"),
           "status": "completed",
-          "registration_sha256": _sha256_bytes(registration_bytes),
           "completed_at_utc": datetime.now(timezone.utc).isoformat(),
           "games": game_hashes,
           "result": {"SFT": results["SFT"], "Opponent": results["Opponent"],
                      "Draw": results["Draw"]},
       }
+      match_record[binding_field] = _sha256_bytes(registration_bytes)
       (stage / "match.json").write_bytes(_json_bytes(match_record))
       os.replace(stage, output_dir)
       print(f"Immutable match receipts sealed at {output_dir}.")
@@ -1159,14 +1168,15 @@ def run_tournament(opponent_cmd=None, size=9, rounds=4, depth=8,
           except Exception:
               pass
       void_record = {
-          "schema": "fold-go-match-receipt/v1",
+          "schema": ("fold-go-development-measurement/v1" if development
+                     else "fold-go-match-receipt/v1"),
           "status": "void",
-          "registration_sha256": _sha256_bytes(registration_bytes),
           "failed_at_utc": datetime.now(timezone.utc).isoformat(),
           "completed_games": game_hashes,
           "error_type": type(error).__name__,
           "error": str(error),
       }
+      void_record[binding_field] = _sha256_bytes(registration_bytes)
       (stage / "match.json").write_bytes(_json_bytes(void_record))
       os.replace(stage, output_dir)
       raise
@@ -1180,6 +1190,7 @@ def main():
     parser.add_argument("--depth", type=int, default=8)
     parser.add_argument("--rounds", type=int, default=4)
     parser.add_argument("--komi", type=int, default=7)
+    parser.add_argument("--development", action="store_true")
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--engine", nargs=argparse.REMAINDER)
     args = parser.parse_args()
@@ -1193,7 +1204,8 @@ def main():
         if args.output_dir is None:
             parser.error("--output-dir is required for a tournament")
         run_tournament(args.engine, size=args.size, rounds=args.rounds,
-                       depth=args.depth, output_dir=args.output_dir, komi=args.komi)
+                       depth=args.depth, output_dir=args.output_dir, komi=args.komi,
+                       development=args.development)
 
 
 if __name__ == "__main__":

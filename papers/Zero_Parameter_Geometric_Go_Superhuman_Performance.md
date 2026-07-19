@@ -7,7 +7,7 @@ Companion to *The Smithian Fold Theory of Everything* — concept DOI [10.5281/z
 
 Fold Go is a computational proof programme derived from the Smithian Fold Theory (SFT), whose foundation is the machine-checked, self-proven theorem **there is no nothing**. It contains no trained policy network, value network, self-play training, or learned weights. The exact substrate expresses Go legality as counted connectivity and verifies finite board inventories and solved values by independent execution.
 
-The current exact surface reproduces the legal-position census `1, 57, 12,675, 24,318,165` for boards 1×1 through 4×4, plus rectangular counts 5 and 489 for 1×2 and 2×3. Exact empty-board values are freshly secured through 2×2: 1×1 = 0, 1×2 = 0, and 2×2 = +1. Separately, the bounded competitive engine produced two independent two-game sweeps against GNU Go 3.8 on 9×9 at depth ceiling 3. Independent transcript replay accepted every move under positional superko and reproduced all four pass-pass terminals and internal Tromp-area-plus-7 scores. The recovered 19×19 depth-ceiling-4 KataGo task receipt records a further harness-reported 2–0 measurement, 73–54 as Black and 70–66 as White.
+The current exact surface reproduces the legal-position census `1, 57, 12,675, 24,318,165` for boards 1×1 through 4×4, plus rectangular counts 5 and 489 for 1×2 and 2×3. Exact empty-board values are freshly secured through 2×2: 1×1 = 0, 1×2 = 0, and 2×2 = +1. Separately, the bounded competitive engine produced two independent two-game sweeps against GNU Go 3.8 on 9×9 at depth ceiling 3. Independent transcript replay accepted every move under positional superko and reproduced all four pass-pass terminals and internal Tromp-area-plus-7 scores. The recovered 19×19 depth-ceiling-4 KataGo task receipt records a further harness-reported 2–0 measurement, 73–54 as Black and 70–66 as White. The current engine additionally binds complete augmented state, typed transposition bounds, universal pass, complete empty-board orbits, complete active fronts, and immutable source/opponent receipts; typed-TT and no-cache values agree on a sealed 134-state surface with 24 pass-pass terminals.
 
 These are different evidence classes. The census and small-board solver are exact finite certifications. Match transcripts are measured implementation results. The recovered 19×19 receipt stopped both games at the historical 128-ply harness cutoff and used the harness's internal area score. Round 1 contains two rejected `play` responses that the old harness failed to halt on, creating a possible board-state divergence; Round 2 contains no logged rejection. The exact statement supported by the receipt is therefore a **harness-reported 2–0 point-at-cutoff measurement with a Round-1 synchronization defect**. The measurement is retained with its protocol facts rather than withdrawn or conflated with the exact solver.
 
@@ -49,7 +49,7 @@ An independently written Python referee reports zero disagreements. The exact so
 | 1×2 | 0 |
 | 2×2 | +1 |
 
-The 2×2 proof visits 17,038,501 nodes. A fresh 3×3 result was not completed in the bounded release audit and is not promoted here.
+The 2×2 proof visits 17,038,501 nodes. The next exact state extends this same finite exhaustive method to 3×3; the current secured claim remains the exact surface through 2×2.
 
 ## 3. Recorded competitive results
 
@@ -87,6 +87,10 @@ The current competitive implementation records the following testable protocol p
 
 These properties make later matches replayable and expose protocol defects. They do not authorize an AI agent to define rank or publication. Maria's declared criterion is a score strictly above 50% at the point of victory.
 
+The current implementation has now executed those repairs. A sealed six-ply receipt gives typed-TT/no-cache equality on 134 augmented states and 24 pass-pass terminals. The empty board retains every legal dihedral orbit and the occupied/quiescence surface retains every legal active front. In a matched 5×5 development comparison, exact root fractions change the selected move `B5 → B4` between depths one and two in one game and `pass → A3` in the other. This is source-bound applied evidence that the depth relation is active in real play, not Maria Smith's official game or rank conclusion.
+
+The next state is a Maria-authorized 9×9 or full-board campaign on this secured calculation and receipt surface, followed by continued development until the strictly-over-50-percent criterion is attained at each named level. The exact solver, replayed 9×9 victories, recovered 19×19 measurement, complete augmented-state constitution, and active depth-sensitive search provide an executable route; no theorem-derived wall has been established.
+
 ## 5. Reproducibility
 
 Run the census and independent referee from the repository:
@@ -103,4 +107,4 @@ The release evidence map is `tools/RESULTS_INDEX.md`. Raw logs are preserved ver
 
 ## 6. Conclusion
 
-Fold Go demonstrates that a non-trivial part of computational Go can be forced into transparent counted law: legality, finite inventories, and exact small-board values. It also records zero-trained-quantity competitive play through two independently replayed 9×9 GNU Go sweeps and the recovered 19×19 KataGo point-at-cutoff measurement with its exact protocol defect. Competitive development proceeds without redefining proof as prediction.
+Fold Go demonstrates that a non-trivial part of computational Go can be forced into transparent counted law: legality, finite inventories, exact small-board values, complete augmented-state identity, exact cache/reference agreement, and a depth-sensitive competitive calculation. It also records zero-trained-quantity competitive play through two independently replayed 9×9 GNU Go sweeps and the recovered 19×19 KataGo point-at-cutoff measurement with its exact protocol facts. Competitive development proceeds toward the declared victory campaign without redefining proof as prediction or converting development artifacts into limits.

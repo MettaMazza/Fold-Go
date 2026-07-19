@@ -27,6 +27,27 @@ and conclusions.
 - Exact empty-board values: 1×1=0 (2 nodes), 1×2=0 (30 nodes), 2×2=+1 (17,038,501 nodes).
 - Fresh 3×3 result: not completed during the bounded release audit.
 
+## Current applied calculation evidence
+
+- The sealed six-ply augmented-state receipt covers **134** distinct states and
+  **24** pass-pass terminals; typed-TT and no-cache all-actions values agree at
+  every registered state and depth.
+- Empty-board selection retains one representative from every legal dihedral
+  orbit on 5×5, 9×9, and 19×19.
+- Ordinary and quiescence selection retain every legal liberty front of every
+  live group, with the existing search depth as the stopping rule.
+- The matched 5×5 depth-1/depth-2 development receipts are bound by
+  `tools/development_runs/matched_depth_divergence_20260719.json`. Exact
+  candidate fractions change the selected move `B5 → B4` in game 1 and
+  `pass → A3` in game 2. This is applied evidence that deeper calculation is
+  active in real play, not an official result or rank conclusion.
+
+These mechanisms and receipts establish the current engine stage. The next
+state is a Maria-authorized 9×9/full-board campaign on this secured surface,
+followed by continued development through the strictly-over-50-percent victory
+criterion. No development artifact in this index is promoted into a theoretical
+limit or Maria Smith's finding.
+
 ## Recorded historical competitive evidence
 
 ### GNU Go 3.8 — 9×9 — depth ceiling 3 — batch 1

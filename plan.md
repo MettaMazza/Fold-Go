@@ -7,24 +7,43 @@
 - Exact empty-board values through 2×2.
 - Two independently replayed historical 2–0 GNU Go 3.8 results on 9×9 at depth ceiling 3.
 
-## Current engineering work
+## Current secured calculation surface
 
-1. Augmented superko state is absent from the competitive transposition identity.
-2. Transposition entries do not distinguish exact, lower, and upper bounds.
-3. Pass is omitted while stone candidates exist.
-4. Current symmetry reduction does not transform the complete history.
-5. Sparse competitive search is bounded, not exact minimax.
-6. The referee does not yet hash-bind common rules, komi, source, opponent configuration, and transcripts.
+1. Competitive state identity binds board, mover, previous-pass state, and the
+   complete positional-superko history.
+2. Dihedral reduction transforms the complete augmented history.
+3. Transposition entries carry exact, lower, and upper bound type.
+4. Pass is available at every node and pass-pass alone invokes terminal area
+   scoring.
+5. Typed-TT and no-cache all-actions search agree on the sealed 134-state,
+   24-pass-pass augmented-state surface.
+6. New receipts bind source, rules, komi, opponent executable and command files,
+   transcripts, positions, scores, and immutable hashes, and semantic replay
+   independently checks them.
+7. Empty-board search retains every legal dihedral orbit; occupied-board and
+   quiescence search retain every legal active front.
+8. Matched real-play receipts show the exact depth relation changing selected
+   moves from `B5` to `B4` and from `pass` to `A3` between depths one and two.
 
-Earlier agent diagnoses about the packing width and a local one-eye pattern were incorrect. The current packing base already exceeds the provable 19×19 denominator bound, and a local one-eye pattern is not an unconditional-life theorem. Those agent diagnoses were never Maria's findings and never defined the programme's limits.
+Earlier agent diagnoses about packing width and an unconditional local one-eye
+pattern remain historical agent hypotheses, not Maria Smith's findings and not
+limits on the programme.
 
-## Next implementation order
+## Next implementation and measurement order
 
-1. Build an all-actions, no-cache reference search over small reachable augmented states.
-2. Implement complete state identity and bound-typed transposition entries.
-3. Make pass universal and transform complete history under symmetry.
-4. Add immutable referee manifests, protocol-error halts, and transcript replay.
-5. Verify worker-count and move-order identity on the registered comparison set.
-6. Rerun GNU Go 3.8 on 9×9 when Maria designates the build for the real rank run.
-7. Secure the rank only if SFT wins strictly more than 50% at the point of victory.
-8. Then advance to larger boards and stronger opponents, preserving every exact measurement and its provenance. Maria alone decides the publishable conclusion.
+1. Extend the exact augmented-state comparison surface while preserving the
+   current 134-state identity receipt.
+2. Preserve deterministic per-move candidate/value receipts in each applied
+   run and measure further depth on source-bound matched positions.
+3. Execute the next GNU Go 9×9 or full-board run when Maria designates the
+   build, under the complete current receipt protocol.
+4. Continue calculation development and real applied measurement until SFT
+   wins strictly more than 50% at the named level.
+5. Advance through larger boards and stronger opponents, then the full league,
+   preserving every exact measurement and its provenance. Maria alone decides
+   the publishable conclusion.
+
+The exact solver, replayed 9×9 victories, recovered 19×19 measurement, complete
+augmented-state constitution, and active depth-sensitive calculation provide a
+constructive path to those objectives. No theorem-derived wall is present in
+the current evidence.

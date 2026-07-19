@@ -207,6 +207,30 @@ class AugmentedStateTests(unittest.TestCase):
                 hashlib.sha256(model.read_bytes()).hexdigest(),
             ])
 
+    def test_development_run_is_not_labelled_as_an_official_registration(self):
+        original_selector = go.select_sft_move
+        go.select_sft_move = lambda board, color, ceiling=8, \
+            root_last_passed=False: go.PASS
+        try:
+            with tempfile.TemporaryDirectory() as temporary:
+                output = Path(temporary) / "development"
+                result = go.run_tournament(
+                    size=1, rounds=1, depth=0, komi=0,
+                    output_dir=output, development=True)
+                configuration = json.loads(
+                    (output / "development_configuration.json").read_text())
+                self.assertEqual(
+                    configuration["schema"],
+                    "fold-go-development-configuration/v1")
+                self.assertEqual(
+                    configuration["status"], "development-configured")
+                self.assertFalse(configuration["governance_authority"])
+                self.assertFalse((output / "registration.json").exists())
+                self.assertIn(
+                    "development_configuration_sha256", result)
+        finally:
+            go.select_sft_move = original_selector
+
 
 if __name__ == "__main__":
     unittest.main()

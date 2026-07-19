@@ -30,6 +30,14 @@ not erased and not conflated with the exact small-board proofs.
 
 See [tools/RESULTS_INDEX.md](tools/RESULTS_INDEX.md) for the complete evidence map.
 
+## Current engine stage
+
+The competitive implementation now binds board, mover, complete positional-superko history, and previous-pass state; transforms the full augmented history under symmetry; uses typed transposition bounds; keeps pass available at every node; and replays sealed match receipts against source and opponent identities. The six-ply augmented-state receipt compares typed-TT search with the no-cache all-actions reference on **134 states**, including **24 pass-pass terminals**, with exact value identity throughout.
+
+The current search also preserves one representative from every legal empty-board dihedral orbit and every legal active front at quiescence, removing the earlier board-size-specific opening subset and authored two-liberty front cutoff. In a source-bound matched 5×5 depth comparison, the engine's exact root values changed the selected move from `B5` at depth 1 to `B4` at depth 2 in one game, and from `pass` to `A3` in the second. This is implemented evidence that the derived depth relation is active in real play; it is not an agent-owned rank conclusion.
+
+The next state is to carry this complete augmented-state and move surface into Maria-authorized 9×9 and full-board benchmark runs, preserve every source-bound receipt, and continue the greater-than-50-percent victory campaign through stronger opponents. Nothing in the exact state constitution or current applied evidence establishes a theoretical wall: the engine already supplies exact finite legality and values, replayed competitive victories, complete augmented-state identity, and a depth-sensitive competitive search path toward the full board. The frontier is further calculation and applied rank development.
+
 ## Reproduce the exact surface
 
 ```sh
@@ -57,6 +65,7 @@ The 4×4 census is exhaustive and takes several minutes. Long-running solves mus
 | `tools/go_*_referee.py` | independent Python checks |
 | `tools/measure_go.py` | bounded competitive development harness |
 | `tools/RESULTS_INDEX.md` | evidence, hashes, provenance, and protocol facts |
+| `tools/development_runs/matched_depth_divergence_20260719.json` | source-bound depth-1/depth-2 applied move/value comparison |
 | `tools/*.log`, `gtp_logs/` | preserved raw transcripts |
 
 Read [AGENT.md](AGENT.md) before changing the system. Every admitted mechanism must be directly forced, forward-forced, or constitutionally re-derived, and every violation must halt.
