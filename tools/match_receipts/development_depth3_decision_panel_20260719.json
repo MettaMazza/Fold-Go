@@ -1,0 +1,299 @@
+{
+  "benchmark_authority": false,
+  "created_at_utc": "2026-07-19T20:21:59.941856+00:00",
+  "declared_purpose": "Bind complete exact depth-3 candidate rows to one real first-turn position for each SFT colour from the preserved matched games.",
+  "governance_authority": false,
+  "protocol": {
+    "board_size": 5,
+    "komi": 0,
+    "position_selection": "first SFT turn from each colour schedule",
+    "search_ceiling": 3,
+    "source_configuration_sha256": "5ad40eaa059259476145900ef4279b958826783ee33bebeb4d4888a94962ea24"
+  },
+  "provenance": {
+    "agent": "Codex",
+    "authority": "Maria Smith assigns conclusions and official status.",
+    "model": "gpt-5.6-sol",
+    "origin": "Codex implementation development run",
+    "reasoning_level": "high"
+  },
+  "result_type": "measured implementation result",
+  "rows": [
+    {
+      "current_move": "C4",
+      "decision": {
+        "board_before": "0000000000000000000000000",
+        "candidate_order": [
+          "A5",
+          "B5",
+          "C5",
+          "B4",
+          "C4",
+          "C3",
+          "pass"
+        ],
+        "complete_history_sha256": "a7c3b7fa76f97f7ef9256d6576d42efda29ee5907b343114523ecffea422c5b9",
+        "completed_depth": 3,
+        "depths": [
+          {
+            "candidates": [
+              {
+                "denominator": 12,
+                "move": "A5",
+                "numerator": 6,
+                "status": "completed"
+              },
+              {
+                "denominator": 16,
+                "move": "B5",
+                "numerator": 10,
+                "status": "completed"
+              },
+              {
+                "denominator": 9,
+                "move": "C5",
+                "numerator": 5,
+                "status": "completed"
+              },
+              {
+                "denominator": 16,
+                "move": "B4",
+                "numerator": 10,
+                "status": "completed"
+              },
+              {
+                "denominator": 16,
+                "move": "C4",
+                "numerator": 10,
+                "status": "completed"
+              },
+              {
+                "denominator": 16,
+                "move": "C3",
+                "numerator": 10,
+                "status": "completed"
+              },
+              {
+                "denominator": 14,
+                "move": "pass",
+                "numerator": 6,
+                "status": "completed"
+              }
+            ],
+            "depth": 1,
+            "selected": "B5",
+            "status": "completed"
+          },
+          {
+            "candidates": [
+              {
+                "denominator": 16,
+                "move": "A5",
+                "numerator": 8,
+                "status": "completed"
+              },
+              {
+                "denominator": 23,
+                "move": "B5",
+                "numerator": 13,
+                "status": "completed"
+              },
+              {
+                "denominator": 19,
+                "move": "C5",
+                "numerator": 10,
+                "status": "completed"
+              },
+              {
+                "denominator": 24,
+                "move": "B4",
+                "numerator": 14,
+                "status": "completed"
+              },
+              {
+                "denominator": 23,
+                "move": "C4",
+                "numerator": 13,
+                "status": "completed"
+              },
+              {
+                "denominator": 14,
+                "move": "C3",
+                "numerator": 8,
+                "status": "completed"
+              },
+              {
+                "denominator": 16,
+                "move": "pass",
+                "numerator": 6,
+                "status": "completed"
+              }
+            ],
+            "depth": 2,
+            "selected": "B4",
+            "status": "completed"
+          },
+          {
+            "candidates": [
+              {
+                "denominator": 12,
+                "move": "A5",
+                "numerator": 6,
+                "status": "completed"
+              },
+              {
+                "denominator": 24,
+                "move": "B5",
+                "numerator": 14,
+                "status": "completed"
+              },
+              {
+                "denominator": 19,
+                "move": "C5",
+                "numerator": 10,
+                "status": "completed"
+              },
+              {
+                "denominator": 25,
+                "move": "B4",
+                "numerator": 15,
+                "status": "completed"
+              },
+              {
+                "denominator": 18,
+                "move": "C4",
+                "numerator": 11,
+                "status": "completed"
+              },
+              {
+                "denominator": 26,
+                "move": "C3",
+                "numerator": 15,
+                "status": "completed"
+              },
+              {
+                "denominator": 24,
+                "move": "pass",
+                "numerator": 10,
+                "status": "completed"
+              }
+            ],
+            "depth": 3,
+            "selected": "C4",
+            "status": "completed"
+          }
+        ],
+        "node_budget_per_root_candidate": 524288,
+        "root_last_passed": false,
+        "schema": "fold-go-search-decision/v1",
+        "search_ceiling": 3,
+        "selected": "C4",
+        "to_move": "B"
+      },
+      "move_identity": true,
+      "recorded_move": "C4",
+      "seconds": 50.132060625,
+      "sft_side": "Black",
+      "source_game": "game-001.json",
+      "source_game_sha256": "6f57c04cf0c9afac7487830b4f46994dccd2982eeb1c4b9cab5a528a2b916e35",
+      "source_ply": 1
+    },
+    {
+      "current_move": "C4",
+      "decision": {
+        "board_before": "0000000000001000000000000",
+        "candidate_order": [
+          "C4",
+          "pass"
+        ],
+        "complete_history_sha256": "2dbc835e88120f580b721967d1b0f4551fffa76f19be5666b12d834a495dbc3e",
+        "completed_depth": 3,
+        "depths": [
+          {
+            "candidates": [
+              {
+                "denominator": 14,
+                "move": "C4",
+                "numerator": 6,
+                "status": "completed"
+              },
+              {
+                "denominator": 25,
+                "move": "pass",
+                "numerator": 0,
+                "status": "completed"
+              }
+            ],
+            "depth": 1,
+            "selected": "C4",
+            "status": "completed"
+          },
+          {
+            "candidates": [
+              {
+                "denominator": 26,
+                "move": "C4",
+                "numerator": 11,
+                "status": "completed"
+              },
+              {
+                "denominator": 25,
+                "move": "pass",
+                "numerator": 0,
+                "status": "completed"
+              }
+            ],
+            "depth": 2,
+            "selected": "C4",
+            "status": "completed"
+          },
+          {
+            "candidates": [
+              {
+                "denominator": 14,
+                "move": "C4",
+                "numerator": 6,
+                "status": "completed"
+              },
+              {
+                "denominator": 25,
+                "move": "pass",
+                "numerator": 0,
+                "status": "completed"
+              }
+            ],
+            "depth": 3,
+            "selected": "C4",
+            "status": "completed"
+          }
+        ],
+        "node_budget_per_root_candidate": 524288,
+        "root_last_passed": false,
+        "schema": "fold-go-search-decision/v1",
+        "search_ceiling": 3,
+        "selected": "C4",
+        "to_move": "W"
+      },
+      "move_identity": true,
+      "recorded_move": "C4",
+      "seconds": 35.328841415999996,
+      "sft_side": "White",
+      "source_game": "game-002.json",
+      "source_game_sha256": "be7ee1f9d14736845e56642651b7ad5e01ee50f42beeac119153d41d31f16481",
+      "source_ply": 2
+    }
+  ],
+  "schema": "fold-go-depth3-decision-panel/v1",
+  "source_commit": "f71c2d64df33e4a44e26678f760e837a165ab85c",
+  "sources": {
+    "tools/depth3_decision_panel.py": "2d29f35d622a30a2127443b90b8f6c652b4f0ba7ed1748dbd0fbb54aaa610e92",
+    "tools/measure_go.py": "f03332dbd095caedade5d8ec7ffd4d528dd147bc5ee770744b003bffe08a89f9"
+  },
+  "status": "completed",
+  "tally": {
+    "completed_depth_passes": 6,
+    "exact_candidate_rows": 27,
+    "move_identity": 2,
+    "positions": 2
+  }
+}

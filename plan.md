@@ -24,6 +24,9 @@
    quiescence search retain every legal active front.
 8. Matched real-play receipts show the exact depth relation changing selected
    moves from `B5` to `B4` and from `pass` to `A3` between depths one and two.
+9. The current decision instrument recomputed the first real 5×5 depth-3 SFT
+   position from each colour: 2/2 recorded-move identity, six completed depth
+   passes, and 27 exact root-candidate value rows.
 
 Earlier agent diagnoses about packing width and an unconditional local one-eye
 pattern remain historical agent hypotheses, not Maria Smith's findings and not

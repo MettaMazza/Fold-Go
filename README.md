@@ -38,6 +38,15 @@ The current search also preserves one representative from every legal empty-boar
 
 Every new SFT move can now carry a lossless search-decision receipt: the exact board and complete-history address, ordered root candidates, numerator/denominator for every candidate at every completed depth, node-budget status, deepest completed pass, and final deterministic argmax. A matched two-game 5×5 depth-2 GNU Go development execution sealed **28/28** SFT decisions, **56** completed depth passes, and **444** exact candidate-value rows; independent semantic replay verified both games and the full hash chain. The preserved development tally is 1 SFT-side game, 1 opponent-side game and 0 draws. It is applied infrastructure and calculation data, not Maria Smith's official game, rank result, loss, or campaign conclusion.
 
+The completed source-bound 5×5 depth-3 development games have now also been
+re-entered at the calculation layer. The first real SFT position from each
+colour was recomputed by the current instrumented engine: both reached all
+three depth passes, exposed **27 exact candidate rows**, and reproduced the
+recorded `C4` decision in **2/2** positions. The receipt is
+`tools/match_receipts/development_depth3_decision_panel_20260719.json`.
+This extends exact decision traceability to depth 3; it does not rename the
+historical development games as official results or assign their conclusion.
+
 The next state is to carry this complete augmented-state and move surface into Maria-authorized 9×9 and full-board benchmark runs, preserve every source-bound receipt, and continue the greater-than-50-percent victory campaign through stronger opponents. Nothing in the exact state constitution or current applied evidence establishes a theoretical wall: the engine already supplies exact finite legality and values, replayed competitive victories, complete augmented-state identity, and a depth-sensitive competitive search path toward the full board. The frontier is further calculation and applied rank development.
 
 ## Reproduce the exact surface
@@ -69,6 +78,7 @@ The 4×4 census is exhaustive and takes several minutes. Long-running solves mus
 | `tools/RESULTS_INDEX.md` | evidence, hashes, provenance, and protocol facts |
 | `tools/development_runs/matched_depth_divergence_20260719.json` | source-bound depth-1/depth-2 applied move/value comparison |
 | `tools/match_receipts/development_decision_receipts_5x5_d2_20260719/` | replay-verified two-game development run with 28 lossless per-move search decisions |
+| `tools/match_receipts/development_depth3_decision_panel_20260719.json` | current exact depth-3 decisions on the first real SFT position from each colour in the preserved matched games |
 | `tools/*.log`, `gtp_logs/` | preserved raw transcripts |
 
 Read [AGENT.md](AGENT.md) before changing the system. Every admitted mechanism must be directly forced, forward-forced, or constitutionally re-derived, and every violation must halt.
