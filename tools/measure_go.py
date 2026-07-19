@@ -333,25 +333,13 @@ def get_dynamic_sparse_moves(board, to_move_color, legal_moves, tactical_only=Fa
     
     empty = all(x == 0 for x in board.board)
     if empty:
-        # Star points: the board's counted symmetry centres (game geometry).
-        if size == 9:
-            stars = [20, 22, 24, 38, 40, 42, 56, 58, 60]
-        elif size == 19:
-            stars = [60, 66, 72, 174, 180, 186, 288, 294, 300]
-        else:
-            stars = [size * size // 2]
-        valid_stars = [x for x in stars if x in legal_moves]
-        if valid_stars:
-            reps = set()
-            for x in valid_stars:
-                reps.add(get_orbit_representative(x, size, active_symmetries))
-            return list(reps)
-        
-        # If no stars, just reduce legal moves
-        reps = set()
-        for x in legal_moves:
-            reps.add(get_orbit_representative(x, size, active_symmetries))
-        return list(reps)
+        # The empty board has no stones from which to privilege a local front.
+        # Preserve one representative of every legal move orbit instead of
+        # importing a hand-listed star-point subset for selected board sizes.
+        return sorted({
+            get_orbit_representative(move, size, active_symmetries)
+            for move in legal_moves
+        })
 
     visited = [False] * (size * size)
     fronts = set()

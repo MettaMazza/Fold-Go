@@ -48,6 +48,23 @@ class AugmentedStateTests(unittest.TestCase):
         self.assertIsNone(go.gtp_to_index("pass", 2))
         self.assertEqual(go.gtp_to_index("resign", 2), go.RESIGN)
 
+    def test_empty_board_preserves_every_legal_symmetry_orbit(self):
+        for size in (5, 9, 19):
+            board = go.SFTGoBoard(size)
+            legal = board.get_legal_moves(1)
+            symmetries = go.get_augmented_symmetries(board)
+            expected = sorted({
+                go.get_orbit_representative(move, size, symmetries)
+                for move in legal
+            })
+            selected = go.get_dynamic_sparse_moves(board, 1, legal)
+            self.assertEqual(selected, expected)
+            self.assertEqual(
+                {go.get_orbit_representative(move, size, symmetries)
+                 for move in legal},
+                set(selected),
+            )
+
     def test_root_pass_after_prior_pass_uses_terminal_area_value(self):
         board = go.SFTGoBoard(2, komi=0)
         move, value = go._eval_root_candidate(

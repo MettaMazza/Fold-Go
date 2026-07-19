@@ -65,3 +65,11 @@ These recommendations improve replayability and engine coverage. They do not
 authorize, refuse, delay, or veto a real match and cannot define rank or the
 project conclusion. Maria alone decides when the next build runs and what the
 result establishes.
+
+## Complete empty-board orbit surface
+
+The development engine now retains one representative from every legal
+dihedral orbit on an empty board. The former hand-listed 9x9 and 19x19
+star-point subsets are removed, so no board-size-specific opening preference
+can exclude a legal orbit before exact search. This is a completeness
+correction, not an official match or rank conclusion.
