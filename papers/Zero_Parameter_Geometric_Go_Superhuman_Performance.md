@@ -1,6 +1,6 @@
 # Fold Go: Exact Counted Legality, Small-Board Certification, and Recorded Zero-Parameter Match Results
 
-**Maria Smith (Ernos Labs)** — release-corrected preprint, July 2026
+**Maria Smith (Ernos Labs)** — publication edition v2.4, 22 July 2026
 Companion to *The Smithian Fold Theory of Everything* — concept DOI [10.5281/zenodo.21182468](https://doi.org/10.5281/zenodo.21182468)
 
 ## Abstract
